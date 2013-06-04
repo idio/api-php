@@ -13,6 +13,10 @@ class Batch {
         $this->objHandler = curl_multi_init();
         $arrRequests = func_get_args();
 
+        if (count($arrRequests) == 1 && is_array($arrRequests[0])) {
+            $arrRequests = $arrRequests[0];
+        }
+
         foreach ($arrRequests as $objRequest) {
             if (is_a($objRequest, 'IdioApi\Request')) {
                 $this->objRequests[] = $objRequest;
