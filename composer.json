@@ -1,4 +1,7 @@
 {
     "name": "idio/api-php",
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "autoload" : {
+        "psr-0" : {"IdioApi": "lib"}
+    }
 }
