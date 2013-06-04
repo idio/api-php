@@ -16,8 +16,8 @@ class Response {
         
     }
 
-    public function getBody() {
-        return json_decode($this->mxdBody);
+    public function getBody($blnObject = false) {
+        return json_decode($this->mxdBody, !$blnObject);
     }
 
     public function getStatus() {
