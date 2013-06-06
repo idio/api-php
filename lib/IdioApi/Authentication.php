@@ -44,6 +44,11 @@ class Authentication {
     }
     
     static function buildSignature($strRequestMethod, $strRequestPath, $strSecretKey) {
+
+        // Split off any query parameters.
+        $arrRequestParts = explode('?', $strRequestPath);
+        $strRequestPath = array_shift($arrRequestParts);
+
         $strStringToSign = utf8_encode(
             strtoupper($strRequestMethod) . "\n"
           . $strRequestPath . "\n"
