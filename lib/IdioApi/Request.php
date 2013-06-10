@@ -21,7 +21,7 @@ class Request {
 
         $this->objHandler = curl_init();
 
-        $strUrl = "http://api.idio.dev/" . $strUrl;
+        $strUrl = Configuration::getUrl() . $strUrl;
 
         curl_setopt_array($this->objHandler, array(
             CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
