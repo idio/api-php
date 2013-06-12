@@ -49,6 +49,9 @@ class Authentication {
         $arrRequestParts = explode('?', $strRequestPath);
         $strRequestPath = array_shift($arrRequestParts);
 
+        // Prefix with version
+        $strRequestPath = "/" . Configuration::getVersion() . $strRequestPath;
+
         $strStringToSign = utf8_encode(
             strtoupper($strRequestMethod) . "\n"
           . $strRequestPath . "\n"

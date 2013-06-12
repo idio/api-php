@@ -26,8 +26,12 @@ class Configuration {
         self::Instance()->strVersion = $strVersion;
     }
 
+    static function getVersion() {
+        return self::Instance()->strVersion;
+    }
+
     static function getUrl() {
-        return self::Instance()->strBaseUrl . self::Instance()->strVersion;
+        return self::Instance()->strBaseUrl . "/" . self::Instance()->strVersion;
     }
 
 }
