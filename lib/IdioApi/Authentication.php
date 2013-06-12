@@ -60,7 +60,7 @@ class Authentication {
     static function getHeaders($strMethod, $strPath) {
 
         foreach (self::Instance()->arrCredentials as $strKey => $arrCredentials) {
-            if (isset($arrCredentials['key']) && isset($arrCredentials['secret'])) {
+            if (!empty($arrCredentials['key']) && !empty($arrCredentials['secret'])) {
                 $strSignature = self::buildSignature($strMethod, $strPath, $arrCredentials['secret']);
                 $arrHeaders[] = "X-{$strKey}-Authentication: {$arrCredentials['key']}:{$strSignature}";
             }
