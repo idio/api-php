@@ -50,13 +50,15 @@ class Authentication {
         $strRequestPath = array_shift($arrRequestParts);
 
         // Prefix with version
-        $strRequestPath = "/" . Configuration::getVersion() . $strRequestPath;
+        $strVersion = Configuration::getVersion();
+        $strRequestPath = ($strVersion ? "/{$strVersion}" : "") . $strRequestPath;
 
         $strStringToSign = utf8_encode(
             strtoupper($strRequestMethod) . "\n"
           . $strRequestPath . "\n"
           . date('Y-m-d')
         );
+        
         return base64_encode(hash_hmac("sha1", $strStringToSign, $strSecretKey));
     }
 
