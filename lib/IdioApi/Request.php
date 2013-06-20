@@ -2,13 +2,39 @@
 
 namespace IdioApi;
 
+/**
+ * Request
+ * 
+ * Provides a nice wrapper for making requests against the idio API, whilst
+ * taking care of authentication etc.
+ *
+ * Example Usage
+ * 
+ * $objRequest = new IdioApi\Request('GET', '/content')
+ * $objResponse = $arrRequest->send();
+ *
+ * If you are using PHP 5.4 or newer, you can just do
+ * $objResponse = new IdioApi\Request('GET', '/content')->send();
+ *
+ * @package IdioApi
+ */
 class Request {
 
-    protected $objHandler;
+    // cURL Handle
+    protected $objHandle;
     
-    public function __construct($strMethod, $strUrl, $mxdData = array()) {
+    /**
+     * Constructor
+     *
+     * @param string $strMethod HTTP Verb (GET, POST, etc)
+     * @param string $strURL Relative URL (excluding version) to call
+     *           e.g. /content
+     * @param string $mxdData POST data or query parameters to send, 
+     *                depending on HTTP method chosen
+     */
+    public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array()) {
 
-        $arrHeaders = Authentication::getHeaders($strMethod, $strUrl);
+        $arrHeaders = $objClient->getHeaders($strMethod, $strPath);
 
         // If we're sending data, set the content type
         if ($mxdData != null) {
@@ -19,11 +45,11 @@ class Request {
             $mxdData = json_encode($mxdData);
         }
 
-        $this->objHandler = curl_init();
+        $this->objHandle = curl_init();
 
-        $strUrl = Configuration::getUrl() . $strUrl;
+        $strUrl = $objClient->getUrl() . $strPath;
 
-        curl_setopt_array($this->objHandler, array(
+        curl_setopt_array($this->objHandle, array(
             CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
             CURLOPT_ENCODING => 'utf-8',
             CURLOPT_RETURNTRANSFER => true,
@@ -36,15 +62,28 @@ class Request {
 
     }
 
+    /**
+     * Send Request
+     *
+     * @return Response API Response Object
+     */
     public function send() {
 
-        $strContent = curl_exec($this->objHandler);
+        $strContent = curl_exec($this->objHandle);
         return new Response($strContent, $this);
 
     }
 
-    public function getHandler() {
-        return $this->objHandler;
+    /**
+     * Get cURL Handle
+     *
+     * Used by the Batch object to get multiple Request Handles
+     * and fire them all at the same time.
+     *
+     * @return handle cURL handle
+     */
+    public function getHandle() {
+        return $this->objHandle;
     }
 
 }

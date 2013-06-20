@@ -2,59 +2,106 @@
 
 namespace IdioApi;
 
+/**
+ * Batch
+ * 
+ * Submits one or more API Requests in parallel using curl_multi_exec.
+ *
+ * Example Usage
+ * 
+ * $objBatch = new IdioApi\Batch();
+ * $objBatch->add(
+ *     new IdioApi\Request('GET', '/content')
+ * );
+ * $arrResponses = $objBatch->send();
+ *
+ * - OR -
+ *
+ * $objBatch = new IdioApi\Batch(array(
+ *     new IdioApi\Request('GET', '/content')
+ * ));
+ * $arrResponses = $objBatch->send();
+ *
+ * @package IdioApi
+ */
 class Batch {
     
-    protected $objHandler;
+    // Multiple cURL handle
+    protected $objHandle;
 
+    // Array of Request objects
     protected $objRequests = array();
 
-    public function __construct() {
+    /**
+     * Constructor
+     * 
+     * Creates the multiple cURL Handle and adds any requests
+     * that were supplied to the constructor
+     *
+     * @param array $arrRequests Array of Request objects
+     */
+    public function __construct($arrRequests = array()) {
 
-        $this->objHandler = curl_multi_init();
-        $arrRequests = func_get_args();
+        $this->objHandle = curl_multi_init();
 
-        if (count($arrRequests) == 1 && is_array($arrRequests[0])) {
-            $arrRequests = $arrRequests[0];
-        }
-
-        foreach ($arrRequests as $objRequest) {
-            if (is_a($objRequest, 'IdioApi\Request')) {
-                $this->objRequests[] = $objRequest;
-                curl_multi_add_handle($this->objHandler, $objRequest->getHandler());
-            }
+        foreach ($arrRequests as $strKey => $objRequest) {
+            $this->add($strKey, $objRequest);
         }
 
     }
 
+    /**
+     * Add Request
+     * 
+     * Add a Request object to be sent concurrently when send() is called.
+     *
+     * @param string $strKey Key to return responses under
+     * @param Request $objRequest Request Object
+     */
+    public function add($strKey, Request $objRequest) {
+
+        $this->objRequests[$strKey] = $objRequest;
+        curl_multi_add_handle($this->objHandle, $objRequest->getHandle());
+
+    }
+
+    /**
+     * Send Request(s)
+     * 
+     * Concurrently make API requests using curl_multi_exec
+     *
+     * @return array Array of Response objects
+     */
     public function send() {
 
         $blnActive = null;
         $arrResults = array();
 
-        // execute the handles
+        // Execute the handles
         do {
-            $intCurlStatus = curl_multi_exec($this->objHandler, $blnActive);
+            $intCurlStatus = curl_multi_exec($this->objHandle, $blnActive);
         } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
 
         while ($blnActive && $intCurlStatus == CURLM_OK) {
-            if (curl_multi_select($this->objHandler) != -1) {
+            if (curl_multi_select($this->objHandle) != -1) {
                 do {
-                    $mrc = curl_multi_exec($this->objHandler, $blnActive);
+                    $mrc = curl_multi_exec($this->objHandle, $blnActive);
                 } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
             }
         }
 
-        //close the handles
-        foreach ($this->objRequests as $intKey => $objRequest) {
-            $objRequestHandler = $objRequest->getHandler();
-            $arrResults[$intKey] = new Response(
-                curl_multi_getcontent($objRequestHandler),
+        // Close the handles
+        foreach ($this->objRequests as $strKey => $objRequest) {
+            $objRequestHandle = $objRequest->getHandle();
+            $arrResults[$strKey] = new Response(
+                curl_multi_getcontent($objRequestHandle),
                 $objRequest
             );
-            curl_multi_remove_handle($this->objHandler, $objRequestHandler);
+            curl_multi_remove_handle($this->objHandle, $objRequestHandle);
         }
-        curl_multi_close($this->objHandler);
+        curl_multi_close($this->objHandle);
 
+        // Aaaand we're good.
         return $arrResults;
 
     }
