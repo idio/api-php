@@ -1,6 +1,6 @@
 <?php
 
-namespace IdioApi;
+namespace Idio\Api;
 
 /**
  * Request
