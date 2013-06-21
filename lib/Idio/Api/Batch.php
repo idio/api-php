@@ -24,7 +24,8 @@ namespace Idio\Api;
  *
  * @package IdioApi
  */
-class Batch {
+class Batch
+{
     
     // Multiple cURL handle
     protected $objHandle;
@@ -40,7 +41,8 @@ class Batch {
      *
      * @param array $arrRequests Array of Request objects
      */
-    public function __construct($arrRequests = array()) {
+    public function __construct($arrRequests = array())
+    {
 
         $this->objHandle = curl_multi_init();
 
@@ -55,10 +57,13 @@ class Batch {
      * 
      * Add a Request object to be sent concurrently when send() is called.
      *
-     * @param string $strKey Key to return responses under
+     * @param string  $strKey     Key to return responses under
      * @param Request $objRequest Request Object
+     *
+     * @return void
      */
-    public function add($strKey, Request $objRequest) {
+    public function add($strKey, Request $objRequest)
+    {
 
         $this->objRequests[$strKey] = $objRequest;
         curl_multi_add_handle($this->objHandle, $objRequest->getHandle());
@@ -72,7 +77,8 @@ class Batch {
      *
      * @return array Array of Response objects
      */
-    public function send() {
+    public function send()
+    {
 
         $blnActive = null;
         $arrResults = array();
@@ -85,7 +91,7 @@ class Batch {
         while ($blnActive && $intCurlStatus == CURLM_OK) {
             if (curl_multi_select($this->objHandle) != -1) {
                 do {
-                    $mrc = curl_multi_exec($this->objHandle, $blnActive);
+                    curl_multi_exec($this->objHandle, $blnActive);
                 } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
             }
         }
@@ -105,5 +111,4 @@ class Batch {
         return $arrResults;
 
     }
-
 }

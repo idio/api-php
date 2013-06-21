@@ -18,7 +18,8 @@ namespace Idio\Api;
  *
  * @package IdioApi
  */
-class Request {
+class Request
+{
 
     // cURL Handle
     protected $objHandle;
@@ -26,13 +27,15 @@ class Request {
     /**
      * Constructor
      *
+     * @param Client $objClient Idio\Api\Client object
      * @param string $strMethod HTTP Verb (GET, POST, etc)
-     * @param string $strURL Relative URL (excluding version) to call
+     * @param string $strPath   Relative URL (excluding version) to call
      *           e.g. /content
-     * @param string $mxdData POST data or query parameters to send, 
+     * @param string $mxdData   POST data or query parameters to send, 
      *                depending on HTTP method chosen
      */
-    public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array()) {
+    public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array())
+    {
 
         $arrHeaders = $objClient->getHeaders($strMethod, $strPath);
 
@@ -49,16 +52,19 @@ class Request {
 
         $strUrl = $objClient->getUrl() . $strPath;
 
-        curl_setopt_array($this->objHandle, array(
-            CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
-            CURLOPT_ENCODING => 'utf-8',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL => $strUrl,
-            CURLOPT_USERAGENT => 'Idio API PHP Library',
-            CURLOPT_POSTFIELDS => $mxdData,
-            CURLOPT_HTTPHEADER => $arrHeaders,
-            CURLOPT_SSL_VERIFYPEER => false
-        ));
+        curl_setopt_array(
+            $this->objHandle,
+            array(
+                CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
+                CURLOPT_ENCODING => 'utf-8',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_URL => $strUrl,
+                CURLOPT_USERAGENT => 'Idio API PHP Library',
+                CURLOPT_POSTFIELDS => $mxdData,
+                CURLOPT_HTTPHEADER => $arrHeaders,
+                CURLOPT_SSL_VERIFYPEER => false
+            )
+        );
 
     }
 
@@ -67,7 +73,8 @@ class Request {
      *
      * @return Response API Response Object
      */
-    public function send() {
+    public function send()
+    {
 
         $strContent = curl_exec($this->objHandle);
         return new Response($strContent, $this);
@@ -82,8 +89,8 @@ class Request {
      *
      * @return handle cURL handle
      */
-    public function getHandle() {
+    public function getHandle()
+    {
         return $this->objHandle;
     }
-
 }
