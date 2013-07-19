@@ -206,7 +206,8 @@ class Client
      *
      * @return IdioApi\Link Link object
      */
-    public function link($strLink) {
+    public function link($strLink)
+    {
         return new Link($strLink);
     }
 }
