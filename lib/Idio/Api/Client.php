@@ -198,7 +198,7 @@ class Client
     }
 
     /**
-     * Batch Requests
+     * Get Link Object
      *
      * Convenience wrapper for creating a link object. 
      * 

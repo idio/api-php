@@ -43,6 +43,7 @@ class Link
      * Link Constructor
      *
      * @param string $strLink Link to manipulate
+     *
      * @return Idio\Api\Link Link Object
      */
     function __construct($strLink) {
@@ -70,6 +71,7 @@ class Link
      * Set Parameters
      *
      * @param array $arrParameters Array of parameters to merge into the URL
+     *
      * @return Idio\Api\Link Link Object (for chaining purposes)
      */
     function setParameters($arrParameters) {
