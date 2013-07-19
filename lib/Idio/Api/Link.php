@@ -46,11 +46,13 @@ class Link
      *
      * @return Idio\Api\Link Link Object
      */
-    function __construct($strLink) {
+    function __construct($strLink)
+    {
         $this->strLink = $strLink;
 
         $this->arrLinkParts = parse_url($strLink);
         if (isset($this->arrLinkParts['query'])) {
+            // PHP is stupid.
             parse_str($this->arrLinkParts['query'], $this->arrLinkParts['query']);
         } else {
             $this->arrLinkParts['query'] = array();
@@ -74,7 +76,8 @@ class Link
      *
      * @return Idio\Api\Link Link Object (for chaining purposes)
      */
-    function setParameters($arrParameters) {
+    function setParameters($arrParameters)
+    {
         $this->arrLinkParts['query'] = array_replace_recursive(
             $this->arrLinkParts['query'],
             $arrParameters
@@ -87,7 +90,8 @@ class Link
      *
      * @return string The manipulated version of the original URL.
      */
-    function get() {
+    function get()
+    {
         if ($this->blnError) {
             return $strLink;
         }
@@ -107,7 +111,8 @@ class Link
      *
      * @return string The manipulated version of the original URL.
      */
-    function __toString() {
+    function __toString()
+    {
         return $this->get();
     }
 
