@@ -1,4 +1,4 @@
-## Idio API PHP Library
+# Idio API PHP Library
 
 A light, object orientated wrapper for the Idio API
 
@@ -7,11 +7,18 @@ A light, object orientated wrapper for the Idio API
 * Follows the PSR-2 coding standard.
 * Documented and tested
 
-### Introduction
+## Introduction
 
 This library is not concerned with the individual API endpoints. Instead it acts as a simple wrapper for making requests against the API, whilst handling authentication and providing some convenient ways of, for example, making concurrent requests.
 
-### Installation
+## Requirements
+
+* PHP >= 5.3.2 
+ * [cURL extension](http://php.net/manual/en/book.curl.php)
+ * [HTTP extension](http://www.php.net/manual/en/book.http.php) – for link manipulation through `Idio\Api\Link`
+* [PHPUnit](https://github.com/sebastianbergmann/phpunit/) – to run tests. (optional, installable via composer)
+
+## Installation
 
 The easiest way of using the library is through [composer](http://getcomposer.org/). An example project's `composer.json` might look like:
 
@@ -29,7 +36,7 @@ The easiest way of using the library is through [composer](http://getcomposer.or
 }
 ```
 
-### Example Usage
+## Example Usage
 
 ```php
 <?php
@@ -57,10 +64,10 @@ if ($response->getStatus() == 200) {
 }
 ```
 
-### Advanced Features
+## Advanced Features
 
 
-#### Concurrent (Batch) Requests
+### Concurrent (Batch) Requests
 Send multiple API requests concurrently using `curl_exec_multi`.
 
 ```php
@@ -71,7 +78,7 @@ $responses = $api->batch(array(
 ))->send();
 ```
 
-### Click Tracking Link Manipulation
+## Click Tracking Link Manipulation
 
 Manipulate click tracking links to add, change or unset parameters. Useful for non-personalised content which can be cached, and then the links personalised by the client application.
 ```php
