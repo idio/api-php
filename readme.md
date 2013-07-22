@@ -16,6 +16,7 @@ This library is not concerned with the individual API endpoints. Instead it acts
 The easiest way of using the library is through [composer](http://getcomposer.org/). An example project's `composer.json` might look like:
 
 ```json
+{
     "repositories": [
         {
             "type": "vcs",
@@ -23,8 +24,9 @@ The easiest way of using the library is through [composer](http://getcomposer.or
         }
     ],
     "require": {
-        "idio/api-php" : "dev-master"
-    },
+        "idio/api-php" : "dev-development"
+    }
+}
 ```
 
 ### Example Usage
