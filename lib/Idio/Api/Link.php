@@ -93,7 +93,7 @@ class Link
     function get()
     {
         if ($this->blnError) {
-            return $strLink;
+            return $this->strLink;
         }
 
         // Work in the scope of this method so we don't stomp over the
