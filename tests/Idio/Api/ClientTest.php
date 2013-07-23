@@ -21,8 +21,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
         $objClient->setUrl('http://api.idio.co');
 
         $this->assertEquals(
-            $objClient->getUrl(),
             'http://api.idio.co/',
+            $objClient->getUrl(),
             "Expecting the URL to be set correctly"
         );
     }
@@ -35,8 +35,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
         $objClient->setUrl('http://api.idio.co', '0.1');
 
         $this->assertEquals(
-            $objClient->getUrl(),
             'http://api.idio.co/0.1',
+            $objClient->getUrl(),
             "Expecting the URL to be set correctly"
         );
     }
@@ -49,8 +49,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
         $objClient->setUrl('http://api.idio.co', '0.1');
 
         $this->assertEquals(
-            $objClient->getVersion(),
             '0.1',
+            $objClient->getVersion(),
             "Expecting the version to be returned correctly"
         );
     }
@@ -63,8 +63,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
         $objClient->setUrl('http://api.idio.co');
 
         $this->assertEquals(
-            $objClient->getVersion(),
             false,
+            $objClient->getVersion(),
             "Expecting the version to be returned correctly"
         );
     }
