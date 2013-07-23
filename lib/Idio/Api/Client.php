@@ -196,4 +196,18 @@ class Client
     {
         return new Batch($arrRequests);
     }
+
+    /**
+     * Get Link Object
+     *
+     * Convenience wrapper for creating a link object. 
+     * 
+     * @param string $strUrl Link to manipulate
+     *
+     * @return IdioApi\Link Link object
+     */
+    public function link($strLink)
+    {
+        return new Link($strLink);
+    }
 }
