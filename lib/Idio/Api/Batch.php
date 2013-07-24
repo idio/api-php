@@ -28,10 +28,10 @@ class Batch
 {
     
     // Multiple cURL handle
-    protected $objHandle;
+    protected $resHandle;
 
     // Array of Request objects
-    protected $objRequests = array();
+    protected $arrRequests = array();
 
     /**
      * Constructor
@@ -43,13 +43,13 @@ class Batch
      */
     public function __construct($arrRequests = array())
     {
+        $this->resHandle = $this->handle();
 
-        $this->objHandle = curl_multi_init();
-
-        foreach ($arrRequests as $strKey => $objRequest) {
-            $this->add($strKey, $objRequest);
+        foreach ($arrRequests as $strKey => $resRequest) {
+            if (is_a($resRequest, 'Idio\Api\Request')) {
+                $this->add($strKey, $resRequest);
+            }
         }
-
     }
 
     /**
@@ -58,16 +58,14 @@ class Batch
      * Add a Request object to be sent concurrently when send() is called.
      *
      * @param string  $strKey     Key to return responses under
-     * @param Request $objRequest Request Object
+     * @param Request $resRequest Request Object
      *
      * @return void
      */
-    public function add($strKey, Request $objRequest)
+    public function add($mxdKey, Request $resRequest)
     {
-
-        $this->objRequests[$strKey] = $objRequest;
-        curl_multi_add_handle($this->objHandle, $objRequest->getHandle());
-
+        $this->arrRequests[$mxdKey] = $resRequest;
+        $this->addHandle($resRequest->getHandle());
     }
 
     /**
@@ -79,36 +77,126 @@ class Batch
      */
     public function send()
     {
-
         $blnActive = null;
         $arrResults = array();
 
         // Execute the handles
         do {
-            $intCurlStatus = curl_multi_exec($this->objHandle, $blnActive);
+            $intCurlStatus = $this->exec($blnActive);
         } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
 
         while ($blnActive && $intCurlStatus == CURLM_OK) {
-            if (curl_multi_select($this->objHandle) != -1) {
+            if ($this->block() != -1) {
                 do {
-                    curl_multi_exec($this->objHandle, $blnActive);
+                    $this->exec($blnActive);
                 } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
             }
         }
 
         // Close the handles
-        foreach ($this->objRequests as $strKey => $objRequest) {
-            $objRequestHandle = $objRequest->getHandle();
-            $arrResults[$strKey] = new Response(
-                curl_multi_getcontent($objRequestHandle),
-                $objRequest
+        foreach ($this->arrRequests as $mxdKey => $resRequest) {
+            $resRequestHandle = $resRequest->getHandle();
+            $arrResults[$mxdKey] = new Response(
+                $this->get($resRequestHandle),
+                $resRequest
             );
-            curl_multi_remove_handle($this->objHandle, $objRequestHandle);
+            $this->removeHandle($resRequestHandle);
         }
-        curl_multi_close($this->objHandle);
+        
+        $this->close();
 
         // Aaaand we're good.
         return $arrResults;
+    }
 
+    /**
+     * Initialise cURL multi Handle
+     *
+     * Wrapper for curl_multi_init
+     *
+     * @return handle a new cURL multi handle
+     */
+    protected function handle()
+    {
+        return curl_multi_init();
+    }
+
+    /**
+     * Add Request
+     *
+     * Add an individual request to the batch.
+     * Wrapper for curl_multi_add_handle
+     *
+     * @param resource $resRequestHandle Request Handle
+     * @return handle a new cURL multi handle
+     */
+    protected function addHandle($resRequestHandle)
+    {
+        curl_multi_add_handle($this->resHandle, $resRequestHandle);
+    }
+
+    /**
+     * Execute
+     *
+     * Run the sub-connections of the current cURL handle.
+     * Wrapper for curl_multi_exec
+     *
+     * @param  boolean $blnActive Whether the operations are still running.
+     * @return integer cURL code
+     */
+    protected function exec(&$blnActive)
+    {
+        return curl_multi_exec($this->resHandle, $blnActive);
+    }
+
+    /**
+     * Block
+     *
+     * Blocks until there is activity on any of the curl_multi
+     * connections. Wrapper for curl_multi_select.
+     */
+    protected function block()
+    {
+        return curl_multi_select($this->resHandle);
+    }
+
+    /**
+     * Get Content
+     *
+     * Returns the body for a single cURL request.
+     * Wrapper for curl_multi_getcontent.
+     *
+     * @param resource $resRequestHandle Request Handle
+     */
+    protected function get($resRequestHandle)
+    {
+        return curl_multi_getcontent($resRequestHandle);
+    }
+
+    /**
+     * Remove Handle
+     *
+     * Remove a multi handle from a set of cURL handles
+     * Wrapper for curl_multi_remove_handle.
+     *
+     * @param resource $resRequestHandle Request Handle
+     * @return integer Returns 0 on success, or one of the CURLM_XXX error codes.
+     */
+    protected function removeHandle($resRequestHandle)
+    {
+        return curl_multi_remove_handle($this->resHandle, $resRequestHandle);
+    }
+
+    /**
+     * Close Handle
+     *
+     * Close a set of cURL handles. Wrapper for 
+     * curl_multi_close.
+     *
+     * @return void
+     */
+    protected function close()
+    {
+        curl_multi_close($this->resHandle);
     }
 }

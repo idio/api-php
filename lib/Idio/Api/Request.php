@@ -22,7 +22,7 @@ class Request
 {
 
     // cURL Handle
-    protected $objHandle;
+    protected $resHandle;
     
     /**
      * Constructor
@@ -36,7 +36,6 @@ class Request
      */
     public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array())
     {
-
         $arrHeaders = $objClient->getHeaders($strMethod, $strPath);
 
         // If we're sending data, set the content type
@@ -48,12 +47,11 @@ class Request
             $mxdData = json_encode($mxdData);
         }
 
-        $this->objHandle = curl_init();
+        $this->resHandle = $this->handle();
 
         $strUrl = $objClient->getUrl() . $strPath;
 
-        curl_setopt_array(
-            $this->objHandle,
+        $this->setOptions(
             array(
                 CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
                 CURLOPT_ENCODING => 'utf-8',
@@ -65,7 +63,6 @@ class Request
                 CURLOPT_SSL_VERIFYPEER => false
             )
         );
-
     }
 
     /**
@@ -75,10 +72,8 @@ class Request
      */
     public function send()
     {
-
-        $strContent = curl_exec($this->objHandle);
+        $strContent = curl_exec($this->resHandle);
         return new Response($strContent, $this);
-
     }
 
     /**
@@ -91,6 +86,30 @@ class Request
      */
     public function getHandle()
     {
-        return $this->objHandle;
+        return $this->resHandle;
+    }
+
+    /**
+     * Initialise cURL Handle.
+     *
+     * Wrapper for curl_init
+     *
+     * @return resource cURL Handle
+     */
+    protected function handle()
+    {
+        return curl_init();
+    }
+
+    /**
+     * Set cURL Options
+     *
+     * Wrapper for curl_setopt_array
+     *
+     * @param array $arrOptions Array of cURL options
+     */
+    protected function setOptions($arrOptions)
+    {
+        curl_setopt_array($this->resHandle, $arrOptions);
     }
 }
