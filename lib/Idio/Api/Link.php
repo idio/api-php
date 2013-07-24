@@ -22,8 +22,8 @@ namespace Idio\Api;
 class Link
 {
 
-    // Valid 'endpoints' - if the URL we attempt to manipulate doesn't
-    // have one of these as its path, we bail out
+    // Valid 'endpoints' - if the URL we attempt to manipulate doesn't have one
+    // of these as its path, we bail out
     protected $arrValidEndpoints = array(
         '/r',
         '/r/'
@@ -32,8 +32,8 @@ class Link
     // Array of link parts, as returned by parse_url and parse_str
     protected $arrLinkParts = array();
 
-    // Error state (true if the link we're trying to manipulate doesn't
-    // look like one of ours)
+    // Error state (true if the link we're trying to manipulate doesn't look
+    // like one of ours)
     protected $blnError = false;
 
     // The original link passed in

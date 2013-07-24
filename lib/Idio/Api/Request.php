@@ -79,8 +79,8 @@ class Request
     /**
      * Get cURL Handle
      *
-     * Used by the Batch object to get multiple Request Handles
-     * and fire them all at the same time.
+     * Used by the Batch object to get multiple Request Handles and fire them
+     * all at the same time.
      *
      * @return handle cURL handle
      */
@@ -105,8 +105,7 @@ class Request
     /**
      * Execute
      *
-     * Run the sub-connections of the current cURL handle.
-     * Wrapper for curl_exec
+     * Run the sub-connections of the current cURL handle. Wrapper for curl_exec
      *
      * @return string Response Content
      * @codeCoverageIgnore

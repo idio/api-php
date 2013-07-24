@@ -125,8 +125,7 @@ class Batch
     /**
      * Add Request
      *
-     * Add an individual request to the batch.
-     * Wrapper for curl_multi_add_handle
+     * Add an individual request to the batch. Wrapper for curl_multi_add_handle
      *
      * @param resource $resRequestHandle Request Handle
      * @return handle a new cURL multi handle
@@ -140,8 +139,8 @@ class Batch
     /**
      * Execute
      *
-     * Run the sub-connections of the current cURL handle.
-     * Wrapper for curl_multi_exec
+     * Run the sub-connections of the current cURL handle. Wrapper for
+     * curl_multi_exec
      *
      * @param  boolean $blnActive Whether the operations are still running.
      * @return integer cURL code
@@ -155,8 +154,8 @@ class Batch
     /**
      * Block
      *
-     * Blocks until there is activity on any of the curl_multi
-     * connections. Wrapper for curl_multi_select.
+     * Blocks until there is activity on any of the curl_multi connections.
+     * Wrapper for curl_multi_select.
      * @codeCoverageIgnore
      */
     protected function block()
@@ -167,8 +166,8 @@ class Batch
     /**
      * Get Content
      *
-     * Returns the body for a single cURL request.
-     * Wrapper for curl_multi_getcontent.
+     * Returns the body for a single cURL request. Wrapper for
+     * curl_multi_getcontent.
      *
      * @param resource $resRequestHandle Request Handle
      * @codeCoverageIgnore
@@ -181,8 +180,8 @@ class Batch
     /**
      * Remove Handle
      *
-     * Remove a multi handle from a set of cURL handles
-     * Wrapper for curl_multi_remove_handle.
+     * Remove a multi handle from a set of cURL handles. Wrapper for
+     * curl_multi_remove_handle.
      *
      * @param resource $resRequestHandle Request Handle
      * @return integer Returns 0 on success, or one of the CURLM_XXX error codes.
@@ -196,8 +195,7 @@ class Batch
     /**
      * Close Handle
      *
-     * Close a set of cURL handles. Wrapper for 
-     * curl_multi_close.
+     * Close a set of cURL handles. Wrapper for curl_multi_close.
      *
      * @return void
      * @codeCoverageIgnore

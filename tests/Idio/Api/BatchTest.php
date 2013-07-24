@@ -21,7 +21,8 @@ class BatchTest extends \PHPUnit_Framework_TestCase
         $this->objBatch = $this->getMockBuilder('Idio\Api\Batch')
                                 ->setMethods(
                                     array(
-                                        'handle', 'addHandle', 'exec', 'block', 'get', 'removeHandle', 'close'
+                                        'handle', 'addHandle', 'exec',
+                                        'block', 'get', 'removeHandle', 'close'
                                     )
                                 )
                                 ->disableOriginalConstructor()
@@ -29,8 +30,7 @@ class BatchTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that the constructor creates a new
-     * curl multi handle
+     * Test that the constructor creates a new curl multi handle
      */
     public function testConstructor()
     {
@@ -41,9 +41,8 @@ class BatchTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that calling add with a Request will
-     * result in that Requests' handle being
-     * added to the curl multi handle (via add)
+     * Test that calling add with a Request will result in that Requests' handle
+     * being added to the curl multi handle (via add)
      */
     public function testConstructorAddsValidRequests()
     {
@@ -67,8 +66,8 @@ class BatchTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that the constructor ignores 'requests' 
-     * which are not really Requests at all.
+     * Test that the constructor ignores 'requests' which are not really
+     * Requests at all.
      */
     public function testConstructorIgnoresValidRequests()
     {
@@ -83,9 +82,8 @@ class BatchTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that calling add with a Request will
-     * result in that Requests' handle being
-     * added to the curl multi handle
+     * Test that calling add with a Request will result in that Requests' handle
+     * being added to the curl multi handle
      */
     public function testAdd()
     {

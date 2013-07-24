@@ -52,8 +52,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->objRequest->expects($this->once())
                    ->method('setOptions')
                    ->with($this->callback(function ($value) {
-                               return isset($value[CURLOPT_URL])
-                                   && $value[CURLOPT_URL] == 'http://api.idio.co/1.0/test';
+                       return isset($value[CURLOPT_URL])
+                           && $value[CURLOPT_URL] == 'http://api.idio.co/1.0/test';
                    }));
 
         $this->objRequest->__construct($objClient, 'GET', '/test');
@@ -69,8 +69,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->objRequest->expects($this->once())
                    ->method('setOptions')
                    ->with($this->callback(function ($value) use ($arrData) {
-                               return isset($value[CURLOPT_POSTFIELDS])
-                                   && $value[CURLOPT_POSTFIELDS] == json_encode($arrData);
+                       return isset($value[CURLOPT_POSTFIELDS])
+                           && $value[CURLOPT_POSTFIELDS] == json_encode($arrData);
                    }));
 
         $this->objRequest->__construct(new Client(), 'POST', '/test', $arrData);
@@ -91,8 +91,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->objRequest->expects($this->once())
                    ->method('setOptions')
                    ->with($this->callback(function ($value) use ($arrHeaders) {
-                               return isset($value[CURLOPT_HTTPHEADER])
-                                   && $value[CURLOPT_HTTPHEADER] == $arrHeaders;
+                       return isset($value[CURLOPT_HTTPHEADER])
+                           && $value[CURLOPT_HTTPHEADER] == $arrHeaders;
                    }));
 
         $this->objRequest->__construct($objClient, 'GET', '/test');

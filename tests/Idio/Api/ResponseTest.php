@@ -13,10 +13,13 @@ namespace Idio\Api;
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * Set Up
+     */
     public function setUp()
     {
-        $this->objRequest  = $this->getMockBuilder('Idio\Api\Request')
-                                  ->disableOriginalConstructor();
+        $this->objRequest = $this->getMockBuilder('Idio\Api\Request')
+                                 ->disableOriginalConstructor();
 
         $this->objResponse = $this->getMockBuilder('Idio\Api\Response')
                                   ->setMethods(
@@ -27,8 +30,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that the Constructor tries to get the 
-     * curl info from the original request
+     * Test that the Constructor tries to get the curl info from the original
+     * request
      */
     public function testConstructor()
     {
@@ -40,8 +43,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that get status returns the http status
-     * code as returned as part of curl's info
+     * Test that get status returns the http status code as returned as part of
+     * curl's info
      */
     public function testGetStatus()
     {
@@ -66,8 +69,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that getBody returns the response body as an
-     * array
+     * Test that getBody returns the response body as an array
      */
     public function testGetBodyAsArray()
     {
@@ -75,7 +77,10 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             'a' => 1
         );
 
-        $this->objResponse->__construct(json_encode($arrExpectedBody), $this->objRequest);
+        $this->objResponse->__construct(
+            json_encode($arrExpectedBody),
+            $this->objRequest
+        );
 
         $this->assertEquals(
             $arrExpectedBody,
@@ -85,8 +90,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that getBody returns the response body as an
-     * object
+     * Test that getBody returns the response body as an object
      */
     public function testGetBodyAsObject()
     {
@@ -94,7 +98,10 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             'a' => 1
         );
 
-        $this->objResponse->__construct(json_encode($arrExpectedBody), $this->objRequest);
+        $this->objResponse->__construct(
+            json_encode($arrExpectedBody),
+            $this->objRequest
+        );
 
         $this->assertEquals(
             (object)$arrExpectedBody,
@@ -104,8 +111,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that the object, when cast to a string, is the same as the
-     * response body
+     * Test that the object, when cast to a string, is the same as the response
+     * body
      */
     public function testToStringMagicMethod()
     {

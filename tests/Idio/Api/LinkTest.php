@@ -16,8 +16,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * Test manipulating an invalid URL
-     * Should have no effect
+     * Test manipulating an invalid URL should have no effect
      */
     public function testInvalidUrl()
     {
@@ -40,12 +39,12 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test manipulating a URL that is not a click tracking URL
-     * Should have no effect
+     * Test manipulating a URL that is not a click tracking URL should have no
+     * effect
      */
     public function testNotAClickTrackingUrl()
     {
-        $strLink = 'http://www.idioplatform.com/campaigns-are-one-night-stands-a-customer-relationship-is-for-life/';
+        $strLink = 'http://www.idioplatform.com/newsroom';
         $objLink = new Link($strLink);
 
         $objLink->setParameters(

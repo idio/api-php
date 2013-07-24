@@ -191,8 +191,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Signature provided by getHeaders is affected
-     * by the version prefix
+     * Test Signature provided by getHeaders is affected by the version prefix
      */
     public function testBuildSignatureWithVersion()
     {
@@ -222,8 +221,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Signature provided by getHeaders is not affected
-     * by the query string
+     * Test Signature provided by getHeaders is not affected by the query string
      */
     public function testBuildSignatureNoQueryString()
     {
@@ -259,7 +257,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-/**
+    /**
      * Test the batch method returns a Batch object
      */
     public function testBatch()
