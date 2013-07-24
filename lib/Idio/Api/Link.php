@@ -46,7 +46,7 @@ class Link
      *
      * @return Idio\Api\Link Link Object
      */
-    function __construct($strLink)
+    public function __construct($strLink)
     {
         $this->strLink = $strLink;
 
@@ -76,7 +76,7 @@ class Link
      *
      * @return Idio\Api\Link Link Object (for chaining purposes)
      */
-    function setParameters($arrParameters)
+    public function setParameters($arrParameters)
     {
         $this->arrLinkParts['query'] = array_replace_recursive(
             $this->arrLinkParts['query'],
@@ -90,7 +90,7 @@ class Link
      *
      * @return string The manipulated version of the original URL.
      */
-    function get()
+    public function get()
     {
         if ($this->blnError) {
             return $this->strLink;
@@ -111,9 +111,8 @@ class Link
      *
      * @return string The manipulated version of the original URL.
      */
-    function __toString()
+    public function __toString()
     {
         return $this->get();
     }
-
 }
