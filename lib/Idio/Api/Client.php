@@ -149,6 +149,7 @@ class Client
      */
     public function getHeaders($strMethod, $strPath)
     {
+        $arrHeaders = array();
 
         foreach ($this->arrCredentials as $strKey => $arrCredentials) {
             if (!empty($arrCredentials['key']) && !empty($arrCredentials['secret'])) {
