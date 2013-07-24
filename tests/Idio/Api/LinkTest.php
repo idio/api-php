@@ -1,6 +1,7 @@
 <?php
 
 namespace Idio\Api;
+
 include_once('vendor/autoload.php');
 
 /**
@@ -190,7 +191,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      * Test unsetting individual values in an array parameter
      * ?a[a]=1&a[b]=2 => ?a[a]=1
      */
-    public function testSetParametersUnsetArrayParameter() {
+    public function testSetParametersUnsetArrayParameter()
+    {
         $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
         $objLink->setParameters(
             array(
@@ -256,7 +258,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      * Test that the object, when cast to a string, is the same as the
      * response from a call to get()
      */
-    public function testToStringMagicMethod() {
+    public function testToStringMagicMethod()
+    {
         $objLink = new Link('http://a.idio.co/r?');
 
         $this->assertEquals(

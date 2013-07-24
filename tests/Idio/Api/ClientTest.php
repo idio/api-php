@@ -1,6 +1,7 @@
 <?php
 
 namespace Idio\Api;
+
 include_once('vendor/autoload.php');
 
 /**
@@ -11,12 +12,14 @@ include_once('vendor/autoload.php');
  * @package Idio\Api
  * @author Oliver Byford <oliver.byford@idioplatform.com>
  */
-class ClientTest extends \PHPUnit_Framework_TestCase {
+class ClientTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * Test 'Set URL' Method
      */
-    function testSetUrlNoVersion() {
+    public function testSetUrlNoVersion()
+    {
         $objClient = new Client();
         $objClient->setUrl('http://api.idio.co');
 
@@ -30,7 +33,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test 'Set URL' Method when providing a version
      */
-    function testSetUrlWithVersion() {
+    public function testSetUrlWithVersion()
+    {
         $objClient = new Client();
         $objClient->setUrl('http://api.idio.co', '0.1');
 
@@ -44,7 +48,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test 'Get Version' Method with a version
      */
-    function testGetVersionWithVersion() {
+    public function testGetVersionWithVersion()
+    {
         $objClient = new Client();
         $objClient->setUrl('http://api.idio.co', '0.1');
 
@@ -58,7 +63,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test 'Get Version' Method with no version
      */
-    function testGetVersionNoVersion() {
+    public function testGetVersionNoVersion()
+    {
         $objClient = new Client();
         $objClient->setUrl('http://api.idio.co');
 
@@ -68,5 +74,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
             "Expecting the version to be returned correctly"
         );
     }
-
 }
