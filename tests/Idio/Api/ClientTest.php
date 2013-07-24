@@ -217,7 +217,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals(
             $arrHeaders,
             $arrVersionedHeaders,
-            "Expect the version number to affect the signature"
+            "Expecting the version number to affect the signature"
         );
     }
 

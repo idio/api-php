@@ -227,7 +227,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             $objLink,
             $objResult,
-            "Expect the object to be returned for chaining"
+            "Expecting the object to be returned for chaining"
         );
     }
 

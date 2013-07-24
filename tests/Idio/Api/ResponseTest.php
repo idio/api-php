@@ -80,7 +80,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             $arrExpectedBody,
             $this->objResponse->getBody(),
-            "Expect the response body to be returned"
+            "Expecting the response body to be returned"
         );
     }
 
@@ -99,7 +99,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             (object)$arrExpectedBody,
             $this->objResponse->getBody(true),
-            "Expect the response body to be returned"
+            "Expecting the response body to be returned"
         );
     }
 

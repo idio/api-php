@@ -107,7 +107,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             is_resource($objRequest->getHandle()),
-            "Expect the handle to be returned"
+            "Expecting the handle to be returned"
         );
     }
 
@@ -133,7 +133,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             "{$objResponse}",
             'beans',
-            "Expect the response to have the correct body"
+            "Expecting the response to have the correct body"
         );
     }
 }
