@@ -130,7 +130,7 @@ class Client
         $strStringToSign = utf8_encode(
             strtoupper($strRequestMethod) . "\n" .
             $strRequestPath . "\n" .
-            date('Y-m-d')
+            $this->date()
         );
         
         return base64_encode(hash_hmac("sha1", $strStringToSign, $strSecretKey));
@@ -210,5 +210,17 @@ class Client
     public function link($strLink)
     {
         return new Link($strLink);
+    }
+
+    /**
+     * Get Date
+     * 
+     * Get date in Y-m-d form, used as part of 
+     * signature generation and wrapped to allow
+     * for stubbing during tests
+     */
+    protected function date()
+    {
+        return date('Y-m-d');
     }
 }
