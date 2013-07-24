@@ -113,7 +113,7 @@ class Request
      */
     protected function exec()
     {
-        return curl_exec();
+        return curl_exec($this->resHandle);
     }
 
     /**
