@@ -2,6 +2,14 @@
 
 namespace Idio\Api;
 
+/**
+ * Response Tests
+ *
+ * Tests for the Idio Api Request Class
+ *
+ * @package Idio\Api
+ * @author Oliver Byford <oliver.byford@idioplatform.com>
+ */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
 

@@ -4,6 +4,14 @@ namespace Idio\Api;
 
 include_once('vendor/autoload.php');
 
+/**
+ * Batch Tests
+ *
+ * Tests for the Idio Api Batch Request Class
+ *
+ * @package Idio\Api
+ * @author Oliver Byford <oliver.byford@idioplatform.com>
+ */
 class BatchTest extends \PHPUnit_Framework_TestCase
 {
 
