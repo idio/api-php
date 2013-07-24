@@ -72,7 +72,7 @@ class Request
      */
     public function send()
     {
-        $strContent = curl_exec($this->resHandle);
+        $strContent = $this->exec();
         return new Response($strContent, $this);
     }
 
@@ -95,10 +95,25 @@ class Request
      * Wrapper for curl_init
      *
      * @return resource cURL Handle
+     * @codeCoverageIgnore
      */
     protected function handle()
     {
         return curl_init();
+    }
+
+    /**
+     * Execute
+     *
+     * Run the sub-connections of the current cURL handle.
+     * Wrapper for curl_exec
+     *
+     * @return string Response Content
+     * @codeCoverageIgnore
+     */
+    protected function exec()
+    {
+        return curl_exec();
     }
 
     /**
@@ -107,6 +122,7 @@ class Request
      * Wrapper for curl_setopt_array
      *
      * @param array $arrOptions Array of cURL options
+     * @codeCoverageIgnore
      */
     protected function setOptions($arrOptions)
     {

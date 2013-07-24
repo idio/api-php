@@ -115,6 +115,7 @@ class Batch
      * Wrapper for curl_multi_init
      *
      * @return handle a new cURL multi handle
+     * @codeCoverageIgnore
      */
     protected function handle()
     {
@@ -129,6 +130,7 @@ class Batch
      *
      * @param resource $resRequestHandle Request Handle
      * @return handle a new cURL multi handle
+     * @codeCoverageIgnore
      */
     protected function addHandle($resRequestHandle)
     {
@@ -143,6 +145,7 @@ class Batch
      *
      * @param  boolean $blnActive Whether the operations are still running.
      * @return integer cURL code
+     * @codeCoverageIgnore
      */
     protected function exec(&$blnActive)
     {
@@ -154,6 +157,7 @@ class Batch
      *
      * Blocks until there is activity on any of the curl_multi
      * connections. Wrapper for curl_multi_select.
+     * @codeCoverageIgnore
      */
     protected function block()
     {
@@ -167,6 +171,7 @@ class Batch
      * Wrapper for curl_multi_getcontent.
      *
      * @param resource $resRequestHandle Request Handle
+     * @codeCoverageIgnore
      */
     protected function get($resRequestHandle)
     {
@@ -181,6 +186,7 @@ class Batch
      *
      * @param resource $resRequestHandle Request Handle
      * @return integer Returns 0 on success, or one of the CURLM_XXX error codes.
+     * @codeCoverageIgnore
      */
     protected function removeHandle($resRequestHandle)
     {
@@ -194,6 +200,7 @@ class Batch
      * curl_multi_close.
      *
      * @return void
+     * @codeCoverageIgnore
      */
     protected function close()
     {

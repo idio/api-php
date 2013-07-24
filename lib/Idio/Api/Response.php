@@ -91,6 +91,7 @@ class Response
      */
     protected function info($objRequest)
     {
-        return curl_getinfo($objRequest->getHandle());
+        $resHandle = $objRequest->getHandle();
+        return is_resource($resHandle) ? curl_getinfo($resHandle) : false;
     }
 }
