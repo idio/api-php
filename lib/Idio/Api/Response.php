@@ -42,7 +42,7 @@ class Response
     public function __construct($strBody, $objRequest)
     {
 
-        $this->arrInfo = curl_getinfo($objRequest->getHandle());
+        $this->arrInfo = $this->info($objRequest);
         $this->intStatus = $this->arrInfo['http_code'];
         $this->mxdBody = $strBody;
         
@@ -82,5 +82,16 @@ class Response
     public function __toString()
     {
         return $this->mxdBody;
+    }
+
+    /**
+     * Get Info
+     * 
+     * A wrapper for curl_getinfo
+     */
+    protected function info($objRequest)
+    {
+        $resHandle = $objRequest->getHandle();
+        return is_resource($resHandle) ? curl_getinfo($resHandle) : false;
     }
 }

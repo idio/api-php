@@ -1,6 +1,7 @@
 <?php
 
 namespace Idio\Api;
+
 include_once('vendor/autoload.php');
 
 /**
@@ -15,8 +16,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * Test manipulating an invalid URL
-     * Should have no effect
+     * Test manipulating an invalid URL should have no effect
      */
     public function testInvalidUrl()
     {
@@ -39,12 +39,12 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test manipulating a URL that is not a click tracking URL
-     * Should have no effect
+     * Test manipulating a URL that is not a click tracking URL should have no
+     * effect
      */
     public function testNotAClickTrackingUrl()
     {
-        $strLink = 'http://www.idioplatform.com/campaigns-are-one-night-stands-a-customer-relationship-is-for-life/';
+        $strLink = 'http://www.idioplatform.com/newsroom';
         $objLink = new Link($strLink);
 
         $objLink->setParameters(
@@ -190,7 +190,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      * Test unsetting individual values in an array parameter
      * ?a[a]=1&a[b]=2 => ?a[a]=1
      */
-    public function testSetParametersUnsetArrayParameter() {
+    public function testSetParametersUnsetArrayParameter()
+    {
         $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
         $objLink->setParameters(
             array(
@@ -225,7 +226,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             $objLink,
             $objResult,
-            "Expect the object to be returned for chaining"
+            "Expecting the object to be returned for chaining"
         );
     }
 
@@ -256,7 +257,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      * Test that the object, when cast to a string, is the same as the
      * response from a call to get()
      */
-    public function testToStringMagicMethod() {
+    public function testToStringMagicMethod()
+    {
         $objLink = new Link('http://a.idio.co/r?');
 
         $this->assertEquals(

@@ -22,7 +22,7 @@ class Request
 {
 
     // cURL Handle
-    protected $objHandle;
+    protected $resHandle;
     
     /**
      * Constructor
@@ -36,7 +36,6 @@ class Request
      */
     public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array())
     {
-
         $arrHeaders = $objClient->getHeaders($strMethod, $strPath);
 
         // If we're sending data, set the content type
@@ -48,12 +47,11 @@ class Request
             $mxdData = json_encode($mxdData);
         }
 
-        $this->objHandle = curl_init();
+        $this->resHandle = $this->handle();
 
         $strUrl = $objClient->getUrl() . $strPath;
 
-        curl_setopt_array(
-            $this->objHandle,
+        $this->setOptions(
             array(
                 CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
                 CURLOPT_ENCODING => 'utf-8',
@@ -65,7 +63,6 @@ class Request
                 CURLOPT_SSL_VERIFYPEER => false
             )
         );
-
     }
 
     /**
@@ -75,22 +72,59 @@ class Request
      */
     public function send()
     {
-
-        $strContent = curl_exec($this->objHandle);
+        $strContent = $this->exec();
         return new Response($strContent, $this);
-
     }
 
     /**
      * Get cURL Handle
      *
-     * Used by the Batch object to get multiple Request Handles
-     * and fire them all at the same time.
+     * Used by the Batch object to get multiple Request Handles and fire them
+     * all at the same time.
      *
      * @return handle cURL handle
      */
     public function getHandle()
     {
-        return $this->objHandle;
+        return $this->resHandle;
+    }
+
+    /**
+     * Initialise cURL Handle.
+     *
+     * Wrapper for curl_init
+     *
+     * @return resource cURL Handle
+     * @codeCoverageIgnore
+     */
+    protected function handle()
+    {
+        return curl_init();
+    }
+
+    /**
+     * Execute
+     *
+     * Run the sub-connections of the current cURL handle. Wrapper for curl_exec
+     *
+     * @return string Response Content
+     * @codeCoverageIgnore
+     */
+    protected function exec()
+    {
+        return curl_exec($this->resHandle);
+    }
+
+    /**
+     * Set cURL Options
+     *
+     * Wrapper for curl_setopt_array
+     *
+     * @param array $arrOptions Array of cURL options
+     * @codeCoverageIgnore
+     */
+    protected function setOptions($arrOptions)
+    {
+        curl_setopt_array($this->resHandle, $arrOptions);
     }
 }

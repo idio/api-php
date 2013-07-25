@@ -130,7 +130,7 @@ class Client
         $strStringToSign = utf8_encode(
             strtoupper($strRequestMethod) . "\n" .
             $strRequestPath . "\n" .
-            date('Y-m-d')
+            $this->date()
         );
         
         return base64_encode(hash_hmac("sha1", $strStringToSign, $strSecretKey));
@@ -149,6 +149,7 @@ class Client
      */
     public function getHeaders($strMethod, $strPath)
     {
+        $arrHeaders = array();
 
         foreach ($this->arrCredentials as $strKey => $arrCredentials) {
             if (!empty($arrCredentials['key']) && !empty($arrCredentials['secret'])) {
@@ -164,8 +165,8 @@ class Client
     /**
      * Make Request
      *
-     * Convenience wrapper for creating request objects. Does not send the request, in 
-     * case you're looking to batch them up. @see IdioApi\Request.
+     * Convenience wrapper for creating request objects. Does not send the
+     * request, in case you're looking to batch them up. @see IdioApi\Request.
      *
      * @param string $strMethod HTTP Verb (e.g. GET, POST)
      * @param string $strPath   Relative URL (excluding version) to call
@@ -185,8 +186,8 @@ class Client
     /**
      * Batch Requests
      *
-     * Convenience wrapper for creating a batch object. Does not send the requests, in 
-     * case you're looking to so something else. @see IdioApi\Batch.
+     * Convenience wrapper for creating a batch object. Does not send the
+     * requests, in case you're looking to do something else. @see IdioApi\Batch.
      * 
      * @param array $arrRequests Array of Request objects
      *
@@ -209,5 +210,16 @@ class Client
     public function link($strLink)
     {
         return new Link($strLink);
+    }
+
+    /**
+     * Get Date
+     * 
+     * Get date in Y-m-d form, used as part of signature generation and wrapped
+     * to allow for stubbing during tests
+     */
+    protected function date()
+    {
+        return date('Y-m-d');
     }
 }
