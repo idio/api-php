@@ -187,7 +187,7 @@ class Client
      * Batch Requests
      *
      * Convenience wrapper for creating a batch object. Does not send the
-     * requests, in case you're looking to so something else. @see IdioApi\Batch.
+     * requests, in case you're looking to do something else. @see IdioApi\Batch.
      * 
      * @param array $arrRequests Array of Request objects
      *
