@@ -1,0 +1,7 @@
+<phpunit colors="false" verbose="false">
+   <testsuites>
+     <testsuite name="API PHP Lib Tests">
+       <directory>tests</directory>
+     </testsuite>
+   </testsuites>
+</phpunit>
