@@ -1,25 +1,36 @@
-.PHONY: all install install-dev test test-tap test-coverage
+# variables
 
-CONFIG_FILE = $(shell pwd)/phpunit.xml
-PU = phpunit --configuration ${CONFIG_FILE}
+PHP_UNIT = vendor/phpunit/phpunit/phpunit.php
+CONFIG_FILE = $(PWD)/phpunit.xml
+TEST_CMD = $(PHP_UNIT) --configuration ${CONFIG_FILE}
+
+# aliases
 
 all: install
+install: vendor
+test-all: test-cov
 
-install:
-	composer install
+# targets
 
-install-dev:
+clean:
+	rm -rf vendor tmp/report
+
+vendor: composer.json composer.lock
+	composer install --no-dev
+
+$(PHP_UNIT): composer.json composer.lock
 	composer install --dev
 
-test-tap:
-	${PU} --tap
-
-test-coverage:
-	${PU} --coverage-html tmp/report
-
-test:
+test: $(PHP_UNIT)
         ifeq '$(env)' 'ci'
-		$(PU) --tap
+		$(TEST_CMD) --tap
         else
-		$(PU)
+		$(TEST_CMD)
         endif
+
+test-cov: $(PHP_UNIT)
+	$(TEST_CMD) --coverage-html tmp/report
+
+# phonies
+
+.PHONY: all clean install test test-all test-cov
