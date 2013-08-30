@@ -17,9 +17,11 @@ clean:
 
 vendor: composer.json composer.lock
 	composer install --no-dev
+	touch $@
 
 $(PHP_UNIT): composer.json composer.lock
 	composer install --dev
+	touch $@
 
 test: $(PHP_UNIT)
         ifeq '$(env)' 'ci'
