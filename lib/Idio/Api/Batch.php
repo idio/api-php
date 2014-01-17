@@ -82,16 +82,15 @@ class Batch
 
         // Execute the handles
         do {
-            $intCurlStatus = $this->exec($blnActive);
-        } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
-
-        while ($blnActive && $intCurlStatus == CURLM_OK) {
-            if ($this->block() != -1) {
-                do {
-                    $this->exec($blnActive);
-                } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
-            }
-        }
+            // CURLM_CALL_MULTI_PERFORM means that there is more processing to
+            // be done immediately, in which case we shouldn't block
+            do {
+                $intStatus = $this->exec($blnActive);
+            } while ($intStatus == CURLM_CALL_MULTI_PERFORM);
+            // Otherwise block until further activity is detected on the sockets
+            // and then exec again until we're finished
+            $this->block();
+        } while ($blnActive > 0);
 
         // Close the handles
         foreach ($this->arrRequests as $mxdKey => $resRequest) {
