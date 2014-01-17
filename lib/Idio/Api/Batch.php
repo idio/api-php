@@ -82,16 +82,8 @@ class Batch
 
         // Execute the handles
         do {
-            $intCurlStatus = $this->exec($blnActive);
-        } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
-
-        while ($blnActive && $intCurlStatus == CURLM_OK) {
-            if ($this->block() != -1) {
-                do {
-                    $this->exec($blnActive);
-                } while ($intCurlStatus == CURLM_CALL_MULTI_PERFORM);
-            }
-        }
+            $this->exec($blnActive);
+        } while ($blnActive && $this->block());
 
         // Close the handles
         foreach ($this->arrRequests as $mxdKey => $resRequest) {
@@ -160,7 +152,8 @@ class Batch
      */
     protected function block()
     {
-        return curl_multi_select($this->resHandle);
+        curl_multi_select($this->resHandle);
+        return true;
     }
 
     /**

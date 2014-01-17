@@ -36,6 +36,9 @@ class Request
      */
     public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array())
     {
+        if (substr($strPath, 0, 1) != '/') {
+            $strPath = "/{$strPath}";
+        }
         $arrHeaders = $objClient->getHeaders($strMethod, $strPath);
 
         // If we're sending data, set the content type
