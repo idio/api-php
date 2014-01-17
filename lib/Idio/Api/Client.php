@@ -64,7 +64,7 @@ class Client
      */
     public function getUrl()
     {
-        return $this->strBaseUrl . "/" . $this->strVersion;
+        return $this->getVersion() ? "$this->strBaseUrl/{$this->getVersion()}" : $this->strBaseUrl;
     }
 
     /**

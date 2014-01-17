@@ -24,7 +24,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $objClient->setUrl('http://api.idio.co');
 
         $this->assertEquals(
-            'http://api.idio.co/',
+            'http://api.idio.co',
             $objClient->getUrl(),
             "Expecting the URL to be set correctly"
         );
