@@ -82,15 +82,8 @@ class Batch
 
         // Execute the handles
         do {
-            // CURLM_CALL_MULTI_PERFORM means that there is more processing to
-            // be done immediately, in which case we shouldn't block
-            do {
-                $intStatus = $this->exec($blnActive);
-            } while ($intStatus == CURLM_CALL_MULTI_PERFORM);
-            // Otherwise block until further activity is detected on the sockets
-            // and then exec again until we're finished
-            $this->block();
-        } while ($blnActive > 0);
+            $this->exec($blnActive);
+        } while ($blnActive && $this->block());
 
         // Close the handles
         foreach ($this->arrRequests as $mxdKey => $resRequest) {
@@ -159,7 +152,8 @@ class Batch
      */
     protected function block()
     {
-        return curl_multi_select($this->resHandle);
+        curl_multi_select($this->resHandle);
+        return true;
     }
 
     /**
