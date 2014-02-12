@@ -1,38 +1,40 @@
-# variables
+# conditionals
 
-PHP_UNIT = vendor/phpunit/phpunit/phpunit.php
-CONFIG_FILE = $(PWD)/phpunit.xml
-TEST_CMD = $(PHP_UNIT) --configuration ${CONFIG_FILE}
+ifeq '$(env)' 'ci'
+  reporter = --tap
+endif
+
+# default
+
+default:
 
 # aliases
 
-all: install
 install: vendor
-test-all: test-cov
 
-# targets
+# tasks
 
 clean:
 	rm -rf vendor tmp/report
+
+test: vendor/dev
+	vendor/phpunit/phpunit/phpunit.php \
+	  --configuration phpunit.xml $(reporter)
+
+test-cov: vendor/dev
+	vendor/phpunit/phpunit/phpunit.php \
+	  --configuration phpunit.xml --coverage-html tmp/report
+
+# targets
 
 vendor: composer.json composer.lock
 	composer install --no-dev
 	touch $@
 
-$(PHP_UNIT): composer.json composer.lock
+vendor/dev: composer.json composer.lock
 	composer install --dev
 	touch $@
 
-test: $(PHP_UNIT)
-        ifeq '$(env)' 'ci'
-		$(TEST_CMD) --tap
-        else
-		$(TEST_CMD)
-        endif
-
-test-cov: $(PHP_UNIT)
-	$(TEST_CMD) --coverage-html tmp/report
-
 # phonies
 
-.PHONY: all clean install test test-all test-cov
+.PHONY: default clean install test test-cov
