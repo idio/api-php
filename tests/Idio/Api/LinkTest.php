@@ -14,7 +14,6 @@ include_once('vendor/autoload.php');
  */
 class LinkTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * Test manipulating an invalid URL should have no effect
      */

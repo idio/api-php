@@ -4,12 +4,12 @@ namespace Idio\Api;
 
 /**
  * Request
- * 
+ *
  * Provides a nice wrapper for making requests against the idio API, whilst
  * taking care of authentication etc.
  *
  * Example Usage
- * 
+ *
  * $objRequest = new IdioApi\Request('GET', '/content')
  * $objResponse = $arrRequest->send();
  *
@@ -23,7 +23,7 @@ class Request
 
     // cURL Handle
     protected $resHandle;
-    
+
     /**
      * Constructor
      *

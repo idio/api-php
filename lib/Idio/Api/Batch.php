@@ -4,11 +4,11 @@ namespace Idio\Api;
 
 /**
  * Batch
- * 
+ *
  * Submits one or more API Requests in parallel using curl_multi_exec.
  *
  * Example Usage
- * 
+ *
  * $objBatch = new IdioApi\Batch();
  * $objBatch->add(
  *     new IdioApi\Request('GET', '/content')
@@ -26,7 +26,6 @@ namespace Idio\Api;
  */
 class Batch
 {
-    
     // Multiple cURL handle
     protected $resHandle;
 
@@ -35,7 +34,7 @@ class Batch
 
     /**
      * Constructor
-     * 
+     *
      * Creates the multiple cURL Handle and adds any requests
      * that were supplied to the constructor
      *
@@ -54,7 +53,7 @@ class Batch
 
     /**
      * Add Request
-     * 
+     *
      * Add a Request object to be sent concurrently when send() is called.
      *
      * @param string  $strKey     Key to return responses under
@@ -66,11 +65,13 @@ class Batch
     {
         $this->arrRequests[$mxdKey] = $resRequest;
         $this->addHandle($resRequest->getHandle());
+
+        return $this;
     }
 
     /**
      * Send Request(s)
-     * 
+     *
      * Concurrently make API requests using curl_multi_exec
      *
      * @return array Array of Response objects
@@ -94,7 +95,7 @@ class Batch
             );
             $this->removeHandle($resRequestHandle);
         }
-        
+
         $this->close();
 
         // Aaaand we're good.

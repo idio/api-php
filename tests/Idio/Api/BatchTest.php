@@ -14,7 +14,6 @@ include_once('vendor/autoload.php');
  */
 class BatchTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         $this->objClient = new Client();

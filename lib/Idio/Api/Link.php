@@ -4,11 +4,11 @@ namespace Idio\Api;
 
 /**
  * Link
- * 
+ *
  * Class to handle manipulation of click tracking links
  *
  * Example Usage
- * 
+ *
  * $objLink = new IdioApi\Link('http://a.idio.co/r?o=1&d=1&u=http%3A%2F%2Fwww.idioplatform.com%2F&c=idio');
  * $objLink->setParameters(array(
  *     'x' => array(
@@ -21,7 +21,6 @@ namespace Idio\Api;
  */
 class Link
 {
-
     // Valid 'endpoints' - if the URL we attempt to manipulate doesn't have one
     // of these as its path, we bail out
     protected $arrValidEndpoints = array(
@@ -86,7 +85,7 @@ class Link
     }
 
     /**
-     * Get Link 
+     * Get Link
      *
      * @return string The manipulated version of the original URL.
      */

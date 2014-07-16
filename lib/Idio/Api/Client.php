@@ -4,7 +4,7 @@ namespace Idio\Api;
 
 /**
  * Client
- * 
+ *
  * Handles configuration (URL, version) and authentication for idio API
  * requests
  *
@@ -12,7 +12,6 @@ namespace Idio\Api;
  */
 class Client
 {
-
     // Authentication Credentials
     protected $arrCredentials = array(
         'App' => array(
@@ -71,7 +70,7 @@ class Client
 
     /**
      * Set App Credentials
-     * 
+     *
      * @param string $strAppApiKey    API Key
      * @param string $strAppApiSecret API Secret
      *
@@ -89,7 +88,7 @@ class Client
 
     /**
      * Set Delivery Credentials
-     * 
+     *
      * @param string $strDeliveryApiKey    Delivery Key
      * @param string $strDeliveryApiSecret Delivery Secret
      *
@@ -109,13 +108,13 @@ class Client
      * Build Signature
      *
      * Build a signature as defined in the idio API documentation
-     * 
+     *
      * Signature = Base64(
      *    HMAC-SHA1(
      *        Secret Key, UTF-8 Encoding(HTTP Verb + "\n" + Request URI + "\n" + Request Date)
      *    )
      * );
-     * 
+     *
      * @param string $strRequestMethod HTTP Verb - e.g. GET, POST
      * @param string $strRequestPath   Path to the endpoint we're trying to hit, without version prefix
      * @param string $strSecretKey     Secret key to sign with
@@ -124,7 +123,6 @@ class Client
      */
     protected function buildSignature($strRequestMethod, $strRequestPath, $strSecretKey)
     {
-
         // Split off any query parameters.
         $arrRequestParts = explode('?', $strRequestPath);
         $strRequestPath = array_shift($arrRequestParts);
@@ -138,7 +136,7 @@ class Client
             $strRequestPath . "\n" .
             $this->date()
         );
-        
+
         return base64_encode(hash_hmac("sha1", $strStringToSign, $strSecretKey));
     }
 
@@ -165,7 +163,6 @@ class Client
         }
 
         return $arrHeaders;
-
     }
 
     /**
@@ -177,16 +174,14 @@ class Client
      * @param string $strMethod HTTP Verb (e.g. GET, POST)
      * @param string $strPath   Relative URL (excluding version) to call
      *           e.g. /content
-     * @param string $mxdData   POST data or query parameters to send, 
+     * @param string $mxdData   POST data or query parameters to send,
      *                depending on HTTP method chosen
      *
      * @return IdioApi\Response Response object
      */
     public function request($strMethod, $strPath, $mxdData = array())
     {
-
         return new Request($this, $strMethod, $strPath, $mxdData);
-
     }
 
     /**
@@ -194,7 +189,7 @@ class Client
      *
      * Convenience wrapper for creating a batch object. Does not send the
      * requests, in case you're looking to do something else. @see IdioApi\Batch.
-     * 
+     *
      * @param array $arrRequests Array of Request objects
      *
      * @return IdioApi\Batch Batch object
@@ -207,8 +202,8 @@ class Client
     /**
      * Get Link Object
      *
-     * Convenience wrapper for creating a link object. 
-     * 
+     * Convenience wrapper for creating a link object.
+     *
      * @param string $strUrl Link to manipulate
      *
      * @return IdioApi\Link Link object
@@ -220,7 +215,7 @@ class Client
 
     /**
      * Get Date
-     * 
+     *
      * Get date in Y-m-d form, used as part of signature generation and wrapped
      * to allow for stubbing during tests
      */
