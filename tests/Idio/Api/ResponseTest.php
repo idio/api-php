@@ -18,10 +18,10 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->objRequest = $this->getMockBuilder('Idio\Api\Request')
+        $this->request = $this->getMockBuilder('Idio\Api\Request')
                                  ->disableOriginalConstructor();
 
-        $this->objResponse = $this->getMockBuilder('Idio\Api\Response')
+        $this->response = $this->getMockBuilder('Idio\Api\Response')
                                   ->setMethods(
                                       array('info')
                                   )
@@ -35,11 +35,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $this->objResponse->expects($this->once())
+        $this->response->expects($this->once())
              ->method('info')
-             ->with($this->objRequest);
+             ->with($this->request);
 
-        $this->objResponse->__construct('', $this->objRequest);
+        $this->response->__construct('', $this->request);
     }
 
     /**
@@ -48,9 +48,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStatus()
     {
-        $this->objResponse->expects($this->once())
+        $this->response->expects($this->once())
              ->method('info')
-             ->with($this->objRequest)
+             ->with($this->request)
              ->will(
                  $this->returnValue(
                      array(
@@ -59,11 +59,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
                  )
              );
 
-        $this->objResponse->__construct('', $this->objRequest);
+        $this->response->__construct('', $this->request);
 
         $this->assertEquals(
             12345,
-            $this->objResponse->getStatus(),
+            $this->response->getStatus(),
             "Expecting the HTTP status code to be returned"
         );
     }
@@ -73,18 +73,18 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBodyAsArray()
     {
-        $arrExpectedBody = array(
+        $expected = array(
             'a' => 1
         );
 
-        $this->objResponse->__construct(
-            json_encode($arrExpectedBody),
-            $this->objRequest
+        $this->response->__construct(
+            json_encode($expected),
+            $this->request
         );
 
         $this->assertEquals(
-            $arrExpectedBody,
-            $this->objResponse->getBody(),
+            $expected,
+            $this->response->getBody(),
             "Expecting the response body to be returned"
         );
     }
@@ -94,18 +94,18 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBodyAsObject()
     {
-        $arrExpectedBody = array(
+        $expected = array(
             'a' => 1
         );
 
-        $this->objResponse->__construct(
-            json_encode($arrExpectedBody),
-            $this->objRequest
+        $this->response->__construct(
+            json_encode($expected),
+            $this->request
         );
 
         $this->assertEquals(
-            (object)$arrExpectedBody,
-            $this->objResponse->getBody(true),
+            (object)$expected,
+            $this->response->getBody(true),
             "Expecting the response body to be returned"
         );
     }
@@ -116,11 +116,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringMagicMethod()
     {
-        $this->objResponse->__construct('hi', $this->objRequest);
+        $this->response->__construct('hi', $this->request);
 
         $this->assertEquals(
             'hi',
-            "{$this->objResponse}",
+            "{$this->response}",
             "Expecting string casting of object to match the response body"
         );
     }

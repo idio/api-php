@@ -14,18 +14,17 @@ include_once('vendor/autoload.php');
  */
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * Test 'Set URL' Method
      */
     public function testSetUrlNoVersion()
     {
-        $objClient = new Client();
-        $objClient->setUrl('http://api.idio.co');
+        $client = new Client();
+        $client->setUrl('http://api.idio.co');
 
         $this->assertEquals(
             'http://api.idio.co',
-            $objClient->getUrl(),
+            $client->getUrl(),
             "Expecting the URL to be set correctly"
         );
     }
@@ -35,13 +34,27 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUrlWithVersion()
     {
-        $objClient = new Client();
-        $objClient->setUrl('http://api.idio.co', '0.1');
+        $client = new Client();
+        $client->setUrl('http://api.idio.co', '0.1');
 
         $this->assertEquals(
             'http://api.idio.co/0.1',
-            $objClient->getUrl(),
+            $client->getUrl(),
             "Expecting the URL to be set correctly"
+        );
+    }
+
+    /**
+     * Test 'Set URL' Method when providing a version
+     */
+    public function testSetUrlChaining()
+    {
+        $client = new Client();
+
+        $this->assertEquals(
+            $client,
+            $client->setUrl('http://api.idio.co'),
+            "Expecting setUrl to return the object for chaining"
         );
     }
 
@@ -50,12 +63,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetVersionWithVersion()
     {
-        $objClient = new Client();
-        $objClient->setUrl('http://api.idio.co', '0.1');
+        $client = new Client();
+        $client->setUrl('http://api.idio.co', '0.1');
 
         $this->assertEquals(
             '0.1',
-            $objClient->getVersion(),
+            $client->getVersion(),
             "Expecting the version to be returned correctly"
         );
     }
@@ -65,12 +78,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetVersionNoVersion()
     {
-        $objClient = new Client();
-        $objClient->setUrl('http://api.idio.co');
+        $client = new Client();
+        $client->setUrl('http://api.idio.co');
 
         $this->assertEquals(
             false,
-            $objClient->getVersion(),
+            $client->getVersion(),
             "Expecting the version to be returned correctly"
         );
     }
@@ -80,16 +93,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHeadersNoCredentials()
     {
-        $objClient = $this->getMockBuilder('Idio\Api\Client')
+        $client = $this->getMockBuilder('Idio\Api\Client')
                           ->setMethods(array('buildSignature'))
                           ->getMock();
 
-        $objClient->expects($this->never())
+        $client->expects($this->never())
             ->method('buildSignature');
 
         $this->assertEquals(
             array(),
-            $objClient->getHeaders('GET', '/'),
+            $client->getHeaders('GET', '/'),
             "Expecting empty headers to be returned"
         );
 
@@ -100,15 +113,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHeadersAppCredentials()
     {
-        $objClient = $this->getMockBuilder('Idio\Api\Client')
+        $client = $this->getMockBuilder('Idio\Api\Client')
                           ->setMethods(array('buildSignature'))
                           ->getMock();
 
-        $objClient->expects($this->once())
+        $client->expects($this->once())
             ->method('buildSignature')
             ->will($this->returnValue('generated_signature'));
 
-        $objClient->setAppCredentials(
+        $client->setAppCredentials(
             'app_key',
             'app_secret'
         );
@@ -117,7 +130,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             array(
                 'X-App-Authentication: app_key:generated_signature'
             ),
-            $objClient->getHeaders('GET', '/'),
+            $client->getHeaders('GET', '/'),
             "Expecting app headers to be returned"
         );
     }
@@ -127,20 +140,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHeadersAllCredentials()
     {
-        $objClient = $this->getMockBuilder('Idio\Api\Client')
+        $client = $this->getMockBuilder('Idio\Api\Client')
                           ->setMethods(array('buildSignature'))
                           ->getMock();
 
-        $objClient->expects($this->exactly(2))
+        $client->expects($this->exactly(2))
             ->method('buildSignature')
             ->will($this->returnValue('generated_signature'));
 
-        $objClient->setAppCredentials(
+        $client->setAppCredentials(
             'app_key',
             'app_secret'
         );
 
-        $objClient->setDeliveryCredentials(
+        $client->setDeliveryCredentials(
             'delivery_key',
             'delivery_secret'
         );
@@ -150,7 +163,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 'X-App-Authentication: app_key:generated_signature',
                 'X-Delivery-Authentication: delivery_key:generated_signature',
             ),
-            $objClient->getHeaders('GET', '/'),
+            $client->getHeaders('GET', '/'),
             "Expecting app and delivery headers to be returned"
         );
     }
@@ -160,22 +173,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildSignature()
     {
-        $objClient = $this->getMockBuilder('Idio\Api\Client')
+        $client = $this->getMockBuilder('Idio\Api\Client')
                           ->setMethods(array('date'))
                           ->getMock();
 
         // The signature changes by day, so stub the day to always
         // be the 1st January 2000...
-        $objClient->expects($this->exactly(2))
+        $client->expects($this->exactly(2))
             ->method('date')
             ->will($this->returnValue('2000-01-01'));
 
-        $objClient->setAppCredentials(
+        $client->setAppCredentials(
             'abcdefghij',
             '1234567890'
-        );
-
-        $objClient->setDeliveryCredentials(
+        )->setDeliveryCredentials(
             'klmnopqrst',
             '0987654321'
         );
@@ -185,7 +196,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 'X-App-Authentication: abcdefghij:Mjc4N2M4NWM5ZDc4NDg4ZTkyMmJhOTVlMTljYTZlMTg0MWZkYTBhNA==',
                 'X-Delivery-Authentication: klmnopqrst:M2E2YTcxNmQxNDZmNWRjZTRhMGZmM2RjNjNhZmQ1OWY1NTYwMWZkMA=='
             ),
-            $objClient->getHeaders('GET', '/test'),
+            $client->getHeaders('GET', '/test'),
             "Expecting the signatures to be correct"
         );
     }
@@ -195,27 +206,27 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildSignatureWithVersion()
     {
-        $objClient = new Client();
+        $client = new Client();
 
-        $objClient->setAppCredentials(
+        $client->setAppCredentials(
             'abcdefghij',
             '1234567890'
         );
 
-        $objClient->setDeliveryCredentials(
+        $client->setDeliveryCredentials(
             'klmnopqrst',
             '0987654321'
         );
 
-        $arrHeaders = $objClient->getHeaders('GET', '/test');
+        $headers = $client->getHeaders('GET', '/test');
 
-        $objClient->setUrl('', 'version');
+        $client->setUrl('', 'version');
 
-        $arrVersionedHeaders = $objClient->getHeaders('GET', '/test');
+        $versionedHeaders = $client->getHeaders('GET', '/test');
 
         $this->assertNotEquals(
-            $arrHeaders,
-            $arrVersionedHeaders,
+            $headers,
+            $versionedHeaders,
             "Expecting the version number to affect the signature"
         );
     }
@@ -225,21 +236,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildSignatureNoQueryString()
     {
-        $objClient = new Client();
+        $client = new Client();
 
-        $objClient->setAppCredentials(
+        $client->setAppCredentials(
             'abcdefghij',
             '1234567890'
         );
 
-        $objClient->setDeliveryCredentials(
+        $client->setDeliveryCredentials(
             'klmnopqrst',
             '0987654321'
         );
 
         $this->assertEquals(
-            $objClient->getHeaders('GET', '/test'),
-            $objClient->getHeaders('GET', '/test?a=b'),
+            $client->getHeaders('GET', '/test'),
+            $client->getHeaders('GET', '/test?a=b'),
             "Expecting the query string to have no effect on the signature"
         );
     }
@@ -249,10 +260,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testRequest()
     {
-        $objClient = new Client();
+        $client = new Client();
         $this->assertInstanceOf(
             'Idio\Api\Request',
-            $objClient->request('GET', '/test'),
+            $client->request('GET', '/test'),
             "Expecting a Idio\Api\Request object to be returned"
         );
     }
@@ -262,10 +273,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testBatch()
     {
-        $objClient = new Client();
+        $client = new Client();
         $this->assertInstanceOf(
             'Idio\Api\Batch',
-            $objClient->batch(array()),
+            $client->batch(array()),
             "Expecting a Idio\Api\Batch object to be returned"
         );
     }
@@ -275,10 +286,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testLink()
     {
-        $objClient = new Client();
+        $client = new Client();
         $this->assertInstanceOf(
             'Idio\Api\Link',
-            $objClient->link(''),
+            $client->link(''),
             "Expecting a Idio\Api\Link object to be returned"
         );
     }
