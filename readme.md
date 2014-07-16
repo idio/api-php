@@ -31,7 +31,7 @@ The easiest way of using the library is through [composer](http://getcomposer.or
         }
     ],
     "require": {
-        "idio/api-php" : "dev-development"
+        "idio/api-php" : "dev-master"
     }
 }
 ```
