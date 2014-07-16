@@ -14,11 +14,10 @@ include_once('vendor/autoload.php');
  */
 class BatchTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
-        $this->objClient = new Client();
-        $this->objBatch = $this->getMockBuilder('Idio\Api\Batch')
+        $this->client = new Client();
+        $this->batch = $this->getMockBuilder('Idio\Api\Batch')
                                 ->setMethods(
                                     array(
                                         'handle', 'addHandle', 'exec',
@@ -34,10 +33,10 @@ class BatchTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $this->objBatch->expects($this->once())
+        $this->batch->expects($this->once())
              ->method('handle');
 
-        $this->objBatch->__construct();
+        $this->batch->__construct();
     }
 
     /**
@@ -46,21 +45,21 @@ class BatchTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorAddsValidRequests()
     {
-        $objRequest = $this->getMockBuilder('Idio\Api\Request')
+        $request = $this->getMockBuilder('Idio\Api\Request')
                            ->disableOriginalConstructor()
                            ->getMock();
 
-        $objRequest->expects($this->once())
+        $request->expects($this->once())
             ->method('getHandle')
             ->will($this->returnValue('handle!'));
 
-        $this->objBatch->expects($this->once())
+        $this->batch->expects($this->once())
             ->method('addHandle')
             ->with($this->equalTo('handle!'));
 
-        $this->objBatch->__construct(
+        $this->batch->__construct(
             array(
-                'request' => $objRequest
+                'request' => $request
             )
         );
     }
@@ -71,10 +70,10 @@ class BatchTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorIgnoresValidRequests()
     {
-        $this->objBatch->expects($this->never())
+        $this->batch->expects($this->never())
             ->method('addHandle');
 
-        $this->objBatch->__construct(
+        $this->batch->__construct(
             array(
                 'request' => 'string'
             )
@@ -87,18 +86,18 @@ class BatchTest extends \PHPUnit_Framework_TestCase
      */
     public function testAdd()
     {
-        $objRequest = $this->getMockBuilder('Idio\Api\Request')
+        $request = $this->getMockBuilder('Idio\Api\Request')
                            ->disableOriginalConstructor()
                            ->getMock();
 
-        $objRequest->expects($this->once())
+        $request->expects($this->once())
             ->method('getHandle')
             ->will($this->returnValue('handle!'));
 
-        $this->objBatch->expects($this->once())
+        $this->batch->expects($this->once())
             ->method('addHandle')
             ->with($this->equalTo('handle!'));
 
-        $this->objBatch->add('request', $objRequest);
+        $this->batch->add('request', $request);
     }
 }

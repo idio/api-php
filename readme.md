@@ -15,8 +15,10 @@ This library is not concerned with the individual API endpoints. Instead it acts
 
 * PHP >= 5.3.2 
  * [cURL extension](http://php.net/manual/en/book.curl.php)
- * [HTTP extension](http://www.php.net/manual/en/book.http.php) – for link manipulation through `Idio\Api\Link`
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit/) – to run tests. (optional, installable via composer)
+
+### Suggestions
+* [PHP HTTP extension](http://www.php.net/manual/en/book.http.php) – for link manipulation through `Idio\Api\Link`. If not available a compatible library is used.
 
 ## Installation
 
@@ -31,7 +33,7 @@ The easiest way of using the library is through [composer](http://getcomposer.or
         }
     ],
     "require": {
-        "idio/api-php" : "dev-development"
+        "idio/api-php" : "dev-master"
     }
 }
 ```
@@ -49,9 +51,10 @@ $api = new Idio\Api\Client();
 $api->setUrl(
     'https://api.idio.co',
     '1.0'
-);
-
-$api->setAppCredentials(
+)->setAppCredentials(
+    'my_app_key',
+    'my_app_secret'
+)->setDeliveryCredentials(
     'my_delivery_key',
     'my_delivery_secret'
 );
@@ -60,12 +63,21 @@ $api->setAppCredentials(
 $response = $api->request('GET', '/content')->send();
 
 if ($response->getStatus() == 200) {
-    $content = $response->getBody();
+    $result = $response->getBody();
+
+    echo "<p>{$result['total_hits']} Results</p>\n\n";
+
+    foreach ($result['content'] as $item) {
+        echo "<h2>{$item['title']}</h2>\n";
+        echo "<p>{$item['abstract']}</p>\n\n";
+    }
+
+} else {
+    echo "Got {$response->getStatus()} from API.";
 }
 ```
 
 ## Advanced Features
-
 
 ### Concurrent (Batch) Requests
 Send multiple API requests concurrently using `curl_exec_multi`.

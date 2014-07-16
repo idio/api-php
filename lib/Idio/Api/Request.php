@@ -4,65 +4,66 @@ namespace Idio\Api;
 
 /**
  * Request
- * 
+ *
  * Provides a nice wrapper for making requests against the idio API, whilst
  * taking care of authentication etc.
  *
  * Example Usage
- * 
- * $objRequest = new IdioApi\Request('GET', '/content')
- * $objResponse = $arrRequest->send();
+ *
+ * $request = new IdioApi\Request('GET', '/content')
+ * $response = $request->send();
  *
  * If you are using PHP 5.4 or newer, you can just do
- * $objResponse = new IdioApi\Request('GET', '/content')->send();
+ * $response = new IdioApi\Request('GET', '/content')->send();
  *
  * @package IdioApi
  */
 class Request
 {
+    /**
+     * @var cURL Handle
+     */
+    protected $handle;
 
-    // cURL Handle
-    protected $resHandle;
-    
     /**
      * Constructor
      *
-     * @param Client $objClient Idio\Api\Client object
-     * @param string $strMethod HTTP Verb (GET, POST, etc)
-     * @param string $strPath   Relative URL (excluding version) to call
+     * @param Client $client Idio\Api\Client object
+     * @param string $method HTTP Verb (GET, POST, etc)
+     * @param string $path   Relative URL (excluding version) to call
      *           e.g. /content
-     * @param string $mxdData   POST data or query parameters to send, 
+     * @param string $data   POST data or query parameters to send,
      *                depending on HTTP method chosen
      */
-    public function __construct(Client $objClient, $strMethod, $strPath, $mxdData = array())
+    public function __construct(Client $client, $method, $path, $data = array())
     {
-        if (substr($strPath, 0, 1) != '/') {
-            $strPath = "/{$strPath}";
+        if (substr($path, 0, 1) != '/') {
+            $path = "/{$path}";
         }
-        $arrHeaders = $objClient->getHeaders($strMethod, $strPath);
+        $headers = $client->getHeaders($method, $path);
 
         // If we're sending data, set the content type
-        if ($mxdData != null) {
-            $arrHeaders[] = "Content-type: application/json";
+        if ($data != null) {
+            $headers[] = "Content-type: application/json";
         }
 
-        if (!is_string($mxdData) && $mxdData != null) {
-            $mxdData = json_encode($mxdData);
+        if (!is_string($data) && $data != null) {
+            $data = json_encode($data);
         }
 
-        $this->resHandle = $this->handle();
+        $this->handle = $this->handle();
 
-        $strUrl = $objClient->getUrl() . $strPath;
+        $url = $client->getUrl() . $path;
 
         $this->setOptions(
             array(
-                CURLOPT_CUSTOMREQUEST => strToUpper($strMethod),
+                CURLOPT_CUSTOMREQUEST => strtoupper($method),
                 CURLOPT_ENCODING => 'utf-8',
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_URL => $strUrl,
+                CURLOPT_URL => $url,
                 CURLOPT_USERAGENT => 'Idio API PHP Library',
-                CURLOPT_POSTFIELDS => $mxdData,
-                CURLOPT_HTTPHEADER => $arrHeaders,
+                CURLOPT_POSTFIELDS => $data,
+                CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_SSL_VERIFYPEER => false
             )
         );
@@ -75,8 +76,8 @@ class Request
      */
     public function send()
     {
-        $strContent = $this->exec();
-        return new Response($strContent, $this);
+        $content = $this->exec();
+        return new Response($content, $this);
     }
 
     /**
@@ -89,7 +90,7 @@ class Request
      */
     public function getHandle()
     {
-        return $this->resHandle;
+        return $this->handle;
     }
 
     /**
@@ -115,7 +116,7 @@ class Request
      */
     protected function exec()
     {
-        return curl_exec($this->resHandle);
+        return curl_exec($this->handle);
     }
 
     /**
@@ -123,11 +124,11 @@ class Request
      *
      * Wrapper for curl_setopt_array
      *
-     * @param array $arrOptions Array of cURL options
+     * @param array $options Array of cURL options
      * @codeCoverageIgnore
      */
-    protected function setOptions($arrOptions)
+    protected function setOptions($options)
     {
-        curl_setopt_array($this->resHandle, $arrOptions);
+        curl_setopt_array($this->handle, $options);
     }
 }
