@@ -171,7 +171,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersUnsetParameter()
     {
-        $link = new Link('http://a.idio.co/r?a=1');
+        $link = new Link('http://a.idio.co/r?a=1&b=2');
         $link->setParameters(
             array(
                 'a' => null
@@ -179,7 +179,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'http://a.idio.co/r',
+            'http://a.idio.co/r?b=2',
             $link->get(),
             "Expecting the a parameter to be unset"
         );
