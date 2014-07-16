@@ -12,8 +12,10 @@ namespace Idio\Api;
  */
 class Client
 {
-    // Authentication Credentials
-    protected $arrCredentials = array(
+    /**
+     * @var array Client credentials
+     */
+    protected $credentials = array(
         'App' => array(
             'key' => false,
             'secret' => false
@@ -24,25 +26,28 @@ class Client
         )
     );
 
-    // Base URL
-    protected $strBaseUrl = "";
+    /**
+     * @var string Base URL
+     */
+    protected $baseUrl = "";
 
-    // Version Prefix
-    protected $strVersion = "";
+    /**
+     * @var string Version prefix
+     */
+    protected $version = "";
 
     /**
      * Set URL
      *
-     * @param string $strBaseUrl Full URL to the API, including http://
+     * @param string $baseUrl Full URL to the API, including http://
      *              but without a trailing slash
-     * @param string $strVersion Version prefix, e.g. "1.0"
-     *
-     * @return void
+     * @param string $version Version prefix, e.g. "1.0"
+     * @return Idio\Api\Client (for chaining)
      */
-    public function setUrl($strBaseUrl, $strVersion = false)
+    public function setUrl($baseUrl, $version = false)
     {
-        $this->strBaseUrl = $strBaseUrl;
-        $this->strVersion = $strVersion;
+        $this->baseUrl = $baseUrl;
+        $this->version = $version;
 
         return $this;
     }
@@ -54,33 +59,32 @@ class Client
      */
     public function getVersion()
     {
-        return $this->strVersion;
+        return $this->version;
     }
 
     /**
      * Get URL
      *
      * @return string Full base URL, including version
-    * *             e.g. "https://api.idio.co/0.3"
+     *             e.g. "https://api.idio.co/0.3"
      */
     public function getUrl()
     {
-        return $this->getVersion() ? "$this->strBaseUrl/{$this->getVersion()}" : $this->strBaseUrl;
+        return $this->getVersion() ? "$this->baseUrl/{$this->getVersion()}" : $this->baseUrl;
     }
 
     /**
      * Set App Credentials
      *
-     * @param string $strAppApiKey    API Key
-     * @param string $strAppApiSecret API Secret
-     *
-     * @return void
+     * @param string $appKey    API Key
+     * @param string $appSecret API Secret
+     * @return Idio\Api\Client (for chaining)
      */
-    public function setAppCredentials($strAppApiKey, $strAppApiSecret)
+    public function setAppCredentials($appKey, $appSecret)
     {
-        $this->arrCredentials['App'] = array(
-            'key' => $strAppApiKey,
-            'secret' => $strAppApiSecret
+        $this->credentials['App'] = array(
+            'key' => $appKey,
+            'secret' => $appSecret
         );
 
         return $this;
@@ -89,16 +93,15 @@ class Client
     /**
      * Set Delivery Credentials
      *
-     * @param string $strDeliveryApiKey    Delivery Key
-     * @param string $strDeliveryApiSecret Delivery Secret
-     *
-     * @return void
+     * @param string $deliveryKey    Delivery Key
+     * @param string $deliverySecret Delivery Secret
+     * @return Idio\Api\Client (for chaining)
      */
-    public function setDeliveryCredentials($strDeliveryApiKey, $strDeliveryApiSecret)
+    public function setDeliveryCredentials($deliveryKey, $deliverySecret)
     {
-        $this->arrCredentials['Delivery'] = array(
-            'key' => $strDeliveryApiKey,
-            'secret' => $strDeliveryApiSecret
+        $this->credentials['Delivery'] = array(
+            'key' => $deliveryKey,
+            'secret' => $deliverySecret
         );
 
         return $this;
@@ -115,29 +118,28 @@ class Client
      *    )
      * );
      *
-     * @param string $strRequestMethod HTTP Verb - e.g. GET, POST
-     * @param string $strRequestPath   Path to the endpoint we're trying to hit, without version prefix
-     * @param string $strSecretKey     Secret key to sign with
-     *
+     * @param string $method HTTP Verb - e.g. GET, POST
+     * @param string $path   Path to the endpoint we're trying to hit, without version prefix
+     * @param string $secretKey     Secret key to sign with
      * @return string Generated Signature
      */
-    protected function buildSignature($strRequestMethod, $strRequestPath, $strSecretKey)
+    protected function buildSignature($method, $path, $secretKey)
     {
         // Split off any query parameters.
-        $arrRequestParts = explode('?', $strRequestPath);
-        $strRequestPath = array_shift($arrRequestParts);
+        $parts = explode('?', $path);
+        $path = array_shift($parts);
 
         // Prefix with version
-        $strVersion = $this->getVersion();
-        $strRequestPath = ($strVersion ? "/{$strVersion}" : "") . $strRequestPath;
+        $version = $this->getVersion();
+        $path = ($version ? "/{$version}" : "") . $path;
 
-        $strStringToSign = utf8_encode(
-            strtoupper($strRequestMethod) . "\n" .
-            $strRequestPath . "\n" .
+        $string = utf8_encode(
+            strtoupper($method) . "\n" .
+            $path . "\n" .
             $this->date()
         );
 
-        return base64_encode(hash_hmac("sha1", $strStringToSign, $strSecretKey));
+        return base64_encode(hash_hmac("sha1", $string, $secretKey));
     }
 
     /**
@@ -146,23 +148,22 @@ class Client
      * Get the HTTP headers for the app and (optionally) delivery, including
      * the signature
      *
-     * @param string $strMethod HTTP Verb (e.g. GET, POST)
-     * @param string $strPath   Path to the endpoint we want to hit
-     *
+     * @param string $method HTTP Verb (e.g. GET, POST)
+     * @param string $path   Path to the endpoint we want to hit
      * @return array Array of headers to send with the HTTP request
      */
-    public function getHeaders($strMethod, $strPath)
+    public function getHeaders($method, $path)
     {
-        $arrHeaders = array();
+        $headers = array();
 
-        foreach ($this->arrCredentials as $strKey => $arrCredentials) {
-            if (!empty($arrCredentials['key']) && !empty($arrCredentials['secret'])) {
-                $strSignature = $this->buildSignature($strMethod, $strPath, $arrCredentials['secret']);
-                $arrHeaders[] = "X-{$strKey}-Authentication: {$arrCredentials['key']}:{$strSignature}";
+        foreach ($this->credentials as $type => $credentials) {
+            if (!empty($credentials['key']) && !empty($credentials['secret'])) {
+                $signature = $this->buildSignature($method, $path, $credentials['secret']);
+                $headers[] = "X-{$type}-Authentication: {$credentials['key']}:{$signature}";
             }
         }
 
-        return $arrHeaders;
+        return $headers;
     }
 
     /**
@@ -171,17 +172,16 @@ class Client
      * Convenience wrapper for creating request objects. Does not send the
      * request, in case you're looking to batch them up. @see IdioApi\Request.
      *
-     * @param string $strMethod HTTP Verb (e.g. GET, POST)
-     * @param string $strPath   Relative URL (excluding version) to call
+     * @param string $method HTTP Verb (e.g. GET, POST)
+     * @param string $path   Relative URL (excluding version) to call
      *           e.g. /content
-     * @param string $mxdData   POST data or query parameters to send,
+     * @param string $data   POST data or query parameters to send,
      *                depending on HTTP method chosen
-     *
      * @return IdioApi\Response Response object
      */
-    public function request($strMethod, $strPath, $mxdData = array())
+    public function request($method, $path, $data = array())
     {
-        return new Request($this, $strMethod, $strPath, $mxdData);
+        return new Request($this, $method, $path, $data);
     }
 
     /**
@@ -190,13 +190,12 @@ class Client
      * Convenience wrapper for creating a batch object. Does not send the
      * requests, in case you're looking to do something else. @see IdioApi\Batch.
      *
-     * @param array $arrRequests Array of Request objects
-     *
+     * @param array $requests Array of Request objects
      * @return IdioApi\Batch Batch object
      */
-    public function batch($arrRequests)
+    public function batch($requests)
     {
-        return new Batch($arrRequests);
+        return new Batch($requests);
     }
 
     /**
@@ -204,13 +203,12 @@ class Client
      *
      * Convenience wrapper for creating a link object.
      *
-     * @param string $strUrl Link to manipulate
-     *
+     * @param string $url Link to manipulate
      * @return IdioApi\Link Link object
      */
-    public function link($strLink)
+    public function link($url)
     {
-        return new Link($strLink);
+        return new Link($url);
     }
 
     /**
@@ -218,6 +216,8 @@ class Client
      *
      * Get date in Y-m-d form, used as part of signature generation and wrapped
      * to allow for stubbing during tests
+     *
+     * @return string Current date
      */
     protected function date()
     {

@@ -13,14 +13,14 @@ namespace Idio\Api;
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
 
-    protected $objRequest = false;
+    protected $request = false;
 
     /**
      * Set Up
      */
     public function setUp()
     {
-        $this->objRequest = $this->getMockBuilder('Idio\Api\Request')
+        $this->request = $this->getMockBuilder('Idio\Api\Request')
                    ->setMethods(array('handle', 'setOptions', 'exec'))
                    ->disableOriginalConstructor()
                    ->getMock();
@@ -31,14 +31,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorSetsMethod()
     {
-        $this->objRequest->expects($this->once())
+        $this->request->expects($this->once())
                    ->method('setOptions')
                    ->with($this->callback(function ($value) {
                                return isset($value[CURLOPT_CUSTOMREQUEST])
                                    && $value[CURLOPT_CUSTOMREQUEST] == 'GET';
                    }));
 
-        $this->objRequest->__construct(new Client(), 'GET', '/test');
+        $this->request->__construct(new Client(), 'GET', '/test');
     }
 
     /**
@@ -46,17 +46,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorSetsUrl()
     {
-        $objClient = new Client();
-        $objClient->setUrl('http://api.idio.co', '1.0');
+        $client = new Client();
+        $client->setUrl('http://api.idio.co', '1.0');
 
-        $this->objRequest->expects($this->once())
+        $this->request->expects($this->once())
                    ->method('setOptions')
                    ->with($this->callback(function ($value) {
                        return isset($value[CURLOPT_URL])
                            && $value[CURLOPT_URL] == 'http://api.idio.co/1.0/test';
                    }));
 
-        $this->objRequest->__construct($objClient, 'GET', '/test');
+        $this->request->__construct($client, 'GET', '/test');
     }
 
     /**
@@ -64,16 +64,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorSetsData()
     {
-        $arrData = array('a' => 'b');
+        $data = array('a' => 'b');
 
-        $this->objRequest->expects($this->once())
+        $this->request->expects($this->once())
                    ->method('setOptions')
-                   ->with($this->callback(function ($value) use ($arrData) {
+                   ->with($this->callback(function ($value) use ($data) {
                        return isset($value[CURLOPT_POSTFIELDS])
-                           && $value[CURLOPT_POSTFIELDS] == json_encode($arrData);
+                           && $value[CURLOPT_POSTFIELDS] == json_encode($data);
                    }));
 
-        $this->objRequest->__construct(new Client(), 'POST', '/test', $arrData);
+        $this->request->__construct(new Client(), 'POST', '/test', $data);
     }
 
     /**
@@ -81,21 +81,21 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorSetsHeaders()
     {
-        $arrHeaders = array('a' => 'b');
+        $headers = array('a' => 'b');
 
-        $objClient = $this->getMock('Idio\Api\Client');
-        $objClient->expects($this->once())
+        $client = $this->getMock('Idio\Api\Client');
+        $client->expects($this->once())
                   ->method('getHeaders')
-                  ->will($this->returnValue($arrHeaders));
+                  ->will($this->returnValue($headers));
 
-        $this->objRequest->expects($this->once())
+        $this->request->expects($this->once())
                    ->method('setOptions')
-                   ->with($this->callback(function ($value) use ($arrHeaders) {
+                   ->with($this->callback(function ($value) use ($headers) {
                        return isset($value[CURLOPT_HTTPHEADER])
-                           && $value[CURLOPT_HTTPHEADER] == $arrHeaders;
+                           && $value[CURLOPT_HTTPHEADER] == $headers;
                    }));
 
-        $this->objRequest->__construct($objClient, 'GET', '/test');
+        $this->request->__construct($client, 'GET', '/test');
     }
 
     /**
@@ -103,10 +103,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHandle()
     {
-        $objRequest = new Request(new Client(), 'GET', '/test');
+        $request = new Request(new Client(), 'GET', '/test');
 
         $this->assertTrue(
-            is_resource($objRequest->getHandle()),
+            is_resource($request->getHandle()),
             "Expecting the handle to be returned"
         );
     }
@@ -116,22 +116,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSend()
     {
-        $this->objRequest->expects($this->once())
+        $this->request->expects($this->once())
              ->method('exec')
              ->will($this->returnValue('beans'));
 
-        $this->objRequest->__construct(new Client(), 'GET', '/test');
+        $this->request->__construct(new Client(), 'GET', '/test');
 
-        $objResponse = $this->objRequest->send();
+        $response = $this->request->send();
 
         $this->assertInstanceOf(
             'Idio\Api\Response',
-            $objResponse,
+            $response,
             "Expecting a Response object to be returned"
         );
 
         $this->assertEquals(
-            "{$objResponse}",
+            "{$response}",
             'beans',
             "Expecting the response to have the correct body"
         );

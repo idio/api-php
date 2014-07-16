@@ -19,10 +19,10 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidUrl()
     {
-        $strLink = "LOL I'm not really a link";
-        $objLink = new Link($strLink);
+        $url = "LOL I'm not really a link";
+        $link = new Link($url);
 
-        $objLink->setParameters(
+        $link->setParameters(
             array(
                 'x' => array(
                     'idio' => 12345
@@ -31,8 +31,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $strLink,
-            $objLink->get(),
+            $url,
+            $link->get(),
             "Expecting to get the original input to be returned, despite attempts to manipulate it"
         );
     }
@@ -43,10 +43,10 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testNotAClickTrackingUrl()
     {
-        $strLink = 'http://www.idioplatform.com/newsroom';
-        $objLink = new Link($strLink);
+        $url = 'http://www.idioplatform.com/newsroom';
+        $link = new Link($url);
 
-        $objLink->setParameters(
+        $link->setParameters(
             array(
                 'x' => array(
                     'idio' => 12345
@@ -55,8 +55,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $strLink,
-            $objLink->get(),
+            $url,
+            $link->get(),
             "Expecting to get the original URL to be returned, despite attempts to manipulate it"
         );
     }
@@ -67,8 +67,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersNoQueryString()
     {
-        $objLink = new Link('http://a.idio.co/r');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r');
+        $link->setParameters(
             array(
                 'a' => 1
             )
@@ -76,7 +76,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r?a=1',
-            $objLink->get(),
+            $link->get(),
             "Expecting the array parameter to be overwritten"
         );
     }
@@ -87,8 +87,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersOverwriteParameter()
     {
-        $objLink = new Link('http://a.idio.co/r?a=1');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a=1');
+        $link->setParameters(
             array(
                 'a' => 2
             )
@@ -96,7 +96,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r?a=2',
-            $objLink->get(),
+            $link->get(),
             "Expecting the a parameter to be rewritten"
         );
     }
@@ -107,8 +107,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersOverwriteArrayParameter()
     {
-        $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
+        $link->setParameters(
             array(
                 'a' => 2
             )
@@ -116,7 +116,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r?a=2',
-            $objLink->get(),
+            $link->get(),
             "Expecting the a parameter to be overwritten"
         );
     }
@@ -127,8 +127,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersMergeArrayParameter()
     {
-        $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
+        $link->setParameters(
             array(
                 'a' => array(
                     'c' => 3
@@ -138,7 +138,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r?a%5Ba%5D=1&a%5Bb%5D=2&a%5Bc%5D=3',
-            $objLink->get(),
+            $link->get(),
             "Expecting the new parameter to be merged in to the array"
         );
     }
@@ -149,8 +149,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersMergeOverwriteArrayParameter()
     {
-        $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
+        $link->setParameters(
             array(
                 'a' => array(
                     'b' => 3
@@ -160,7 +160,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r?a%5Ba%5D=1&a%5Bb%5D=3',
-            $objLink->get(),
+            $link->get(),
             "Expecting the array parameter to be overwritten"
         );
     }
@@ -171,8 +171,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersUnsetParameter()
     {
-        $objLink = new Link('http://a.idio.co/r?a=1');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a=1');
+        $link->setParameters(
             array(
                 'a' => null
             )
@@ -180,7 +180,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r',
-            $objLink->get(),
+            $link->get(),
             "Expecting the a parameter to be unset"
         );
     }
@@ -191,8 +191,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersUnsetArrayParameter()
     {
-        $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
+        $link->setParameters(
             array(
                 'a' => array(
                     'b' => null
@@ -202,7 +202,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'http://a.idio.co/r?a%5Ba%5D=1',
-            $objLink->get(),
+            $link->get(),
             "Expecting the b value in the array to be unset"
         );
     }
@@ -213,8 +213,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersChainability()
     {
-        $objLink = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
-        $objResult = $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a[a]=1&a[b]=2');
+        $result = $link->setParameters(
             array(
                 'a' => array(
                     'b' => 3
@@ -223,8 +223,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $objLink,
-            $objResult,
+            $link,
+            $result,
             "Expecting the object to be returned for chaining"
         );
     }
@@ -234,20 +234,20 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParametersMultipleCalls()
     {
-        $objLink = new Link('http://a.idio.co/r?a=1');
-        $objLink->setParameters(
+        $link = new Link('http://a.idio.co/r?a=1');
+        $link->setParameters(
             array(
                 'b' => 2
             )
         );
-        $objLink->setParameters(
+        $link->setParameters(
             array(
                 'c' => 3
             )
         );
         $this->assertEquals(
             'http://a.idio.co/r?a=1&b=2&c=3',
-            $objLink->get(),
+            $link->get(),
             "Expecting the array parameter to be overwritten"
         );
     }
@@ -258,11 +258,11 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringMagicMethod()
     {
-        $objLink = new Link('http://a.idio.co/r?');
+        $link = new Link('http://a.idio.co/r?');
 
         $this->assertEquals(
-            $objLink->get(),
-            "{$objLink}",
+            $link->get(),
+            "{$link}",
             "Expecting string casting of object to match output of get()"
         );
     }

@@ -9,40 +9,46 @@ namespace Idio\Api;
  *
  * Example Usage
  *
- * $objRequest = new IdioApi\Request('GET', '/content')
- * $objResponse = $arrRequest->send();
+ * $request = new IdioApi\Request('GET', '/content')
+ * $response = $request->send();
  *
- * if ($objResponse->getStatus() == 200) {
- *     $arrBody = $objResponse->getBody();
- *     echo $arrBody['title'];
+ * if ($response->getStatus() == 200) {
+ *     $result = $response->getBody();
+ *     echo $result['total_hits'];
  * }
  *
  * @package IdioApi
  */
 class Response
 {
-    // cURL Request/Response Information
-    protected $arrInfo;
+    /**
+     * @var array cURL Request/Response Information
+     */
+    protected $info;
 
-    // HTTP Status Code
-    protected $intStatus;
+    /**
+     * @var integer HTTP Status Code
+     */
+    protected $status;
 
-    // Response Body
-    protected $mxdBody;
+    /**
+     * @var mixed Response Body
+     */
+    protected $body;
 
     /**
      * Constructor
      *
-     * @param string  $strBody    The response body
-     * @param Request $objRequest The original Idio\Api\Request object
+     * @param string  $body    The response body
+     * @param Request $request The original Idio\Api\Request object
      *
      * @return void;
      */
-    public function __construct($strBody, $objRequest)
+    public function __construct($body, $request)
     {
-        $this->arrInfo = $this->info($objRequest);
-        $this->intStatus = $this->arrInfo['http_code'];
-        $this->mxdBody = $strBody;
+        $this->info = $this->info($request);
+        $this->status = $this->info['http_code'];
+        $this->body = $body;
     }
 
     /**
@@ -50,13 +56,13 @@ class Response
      *
      * Returns the body, once JSON decoded
      *
-     * @param boolean $blnObject Return as an object? Otherwise will return an array
+     * @param boolean $asObject Return as an object? Otherwise will return an array
      *
      * @return mixed The body in either array or object form.
      */
-    public function getBody($blnObject = false)
+    public function getBody($asObject = false)
     {
-        return json_decode($this->mxdBody, !$blnObject);
+        return json_decode($this->body, !$asObject);
     }
 
     /**
@@ -66,7 +72,7 @@ class Response
      */
     public function getStatus()
     {
-        return $this->intStatus;
+        return $this->status;
     }
 
     /**
@@ -78,7 +84,7 @@ class Response
      */
     public function __toString()
     {
-        return $this->mxdBody;
+        return $this->body;
     }
 
     /**
@@ -86,9 +92,9 @@ class Response
      *
      * A wrapper for curl_getinfo
      */
-    protected function info($objRequest)
+    protected function info($request)
     {
-        $resHandle = $objRequest->getHandle();
-        return is_resource($resHandle) ? curl_getinfo($resHandle) : false;
+        $handle = $request->getHandle();
+        return is_resource($handle) ? curl_getinfo($handle) : false;
     }
 }

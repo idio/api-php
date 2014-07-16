@@ -9,77 +9,86 @@ namespace Idio\Api;
  *
  * Example Usage
  *
- * $objLink = new IdioApi\Link('http://a.idio.co/r?o=1&d=1&u=http%3A%2F%2Fwww.idioplatform.com%2F&c=idio');
- * $objLink->setParameters(array(
+ * $link = new IdioApi\Link('http://a.idio.co/r?o=1&d=1&u=http%3A%2F%2Fwww.idioplatform.com%2F&c=idio');
+ * $link->setParameters(array(
  *     'x' => array(
  *         'idio' => 1234
  *     )
  * ));
- * $strNewLink = $objLink->get();
+ * $url = $link->get();
  *
  * @package IdioApi
  */
 class Link
 {
-    // Valid 'endpoints' - if the URL we attempt to manipulate doesn't have one
-    // of these as its path, we bail out
-    protected $arrValidEndpoints = array(
+    /**
+     * @var array Valid 'endpoints'
+     *
+     * If the URL we attempt to manipulate doesn't have one
+     * of these as its path, we bail out
+     */
+    protected $validEndpoints = array(
         '/r',
         '/r/'
     );
 
-    // Array of link parts, as returned by parse_url and parse_str
-    protected $arrLinkParts = array();
+    /**
+     * @var array Link parts, as returned by parse_url and parse_str
+     */
+    protected $parts = array();
 
-    // Error state (true if the link we're trying to manipulate doesn't look
-    // like one of ours)
-    protected $blnError = false;
+    /**
+     * @var boolean Error state
+     *
+     * True if the link we're trying to manipulate doesn't look like one of ours
+     */
+    protected $error = false;
 
-    // The original link passed in
-    protected $strLink = false;
+    /**
+     * @var string The original link passed in
+     */
+    protected $url = false;
 
     /**
      * Link Constructor
      *
-     * @param string $strLink Link to manipulate
-     *
+     * @param string $url Link to manipulate
      * @return Idio\Api\Link Link Object
      */
-    public function __construct($strLink)
+    public function __construct($url)
     {
-        $this->strLink = $strLink;
+        $this->url = $url;
 
-        $this->arrLinkParts = parse_url($strLink);
-        if (isset($this->arrLinkParts['query'])) {
+        $this->parts = parse_url($url);
+        if (isset($this->parts['query'])) {
             // PHP is stupid.
-            parse_str($this->arrLinkParts['query'], $this->arrLinkParts['query']);
+            parse_str($this->parts['query'], $this->parts['query']);
         } else {
-            $this->arrLinkParts['query'] = array();
+            $this->parts['query'] = array();
         }
 
         // Failed to parse the URL?
-        if (empty($this->arrLinkParts['path'])) {
-            $this->blnError = true;
+        if (empty($this->parts['path'])) {
+            $this->error = true;
         }
 
         // Is it an idio click tracking link?
-        if (!in_array($this->arrLinkParts['path'], $this->arrValidEndpoints)) {
-            $this->blnError = true;
+        if (!in_array($this->parts['path'], $this->validEndpoints)) {
+            $this->error = true;
         }
     }
 
     /**
      * Set Parameters
      *
-     * @param array $arrParameters Array of parameters to merge into the URL
-     *
-     * @return Idio\Api\Link Link Object (for chaining purposes)
+     * @param array $params Array of parameters to merge into the URL
+     * @return Idio\Api\Link (for chaining)
      */
-    public function setParameters($arrParameters)
+    public function setParameters($params)
     {
-        $this->arrLinkParts['query'] = array_replace_recursive(
-            $this->arrLinkParts['query'],
-            $arrParameters
+        $this->parts['query'] = array_replace_recursive(
+            $this->parts['query'],
+            $params
         );
         return $this;
     }
@@ -91,16 +100,16 @@ class Link
      */
     public function get()
     {
-        if ($this->blnError) {
-            return $this->strLink;
+        if ($this->error) {
+            return $this->url;
         }
 
         // Work in the scope of this method so we don't stomp over the
         // original, in case for some reason more changes are needed.
-        $arrLinkParts = $this->arrLinkParts;
-        $arrLinkParts['query'] = http_build_query($arrLinkParts['query']);
+        $parts = $this->parts;
+        $parts['query'] = http_build_query($parts['query']);
 
-        return http_build_url($arrLinkParts);
+        return http_build_url($parts);
     }
 
     /**
