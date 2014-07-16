@@ -44,6 +44,8 @@ class Client
     {
         $this->strBaseUrl = $strBaseUrl;
         $this->strVersion = $strVersion;
+
+        return $this;
     }
 
     /**
@@ -81,6 +83,8 @@ class Client
             'key' => $strAppApiKey,
             'secret' => $strAppApiSecret
         );
+
+        return $this;
     }
 
     /**
@@ -97,6 +101,8 @@ class Client
             'key' => $strDeliveryApiKey,
             'secret' => $strDeliveryApiSecret
         );
+
+        return $this;
     }
 
     /**

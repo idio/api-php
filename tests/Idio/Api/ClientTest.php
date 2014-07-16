@@ -46,6 +46,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test 'Set URL' Method when providing a version
+     */
+    public function testSetUrlChaining()
+    {
+        $objClient = new Client();
+
+        $this->assertEquals(
+            $objClient,
+            $objClient->setUrl('http://api.idio.co'),
+            "Expecting setUrl to return the object for chaining"
+        );
+    }
+
+    /**
      * Test 'Get Version' Method with a version
      */
     public function testGetVersionWithVersion()
@@ -173,9 +187,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $objClient->setAppCredentials(
             'abcdefghij',
             '1234567890'
-        );
-
-        $objClient->setDeliveryCredentials(
+        )->setDeliveryCredentials(
             'klmnopqrst',
             '0987654321'
         );
