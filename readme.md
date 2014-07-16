@@ -15,8 +15,10 @@ This library is not concerned with the individual API endpoints. Instead it acts
 
 * PHP >= 5.3.2 
  * [cURL extension](http://php.net/manual/en/book.curl.php)
- * [HTTP extension](http://www.php.net/manual/en/book.http.php) – for link manipulation through `Idio\Api\Link`
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit/) – to run tests. (optional, installable via composer)
+
+### Suggestions
+* [PHP HTTP extension](http://www.php.net/manual/en/book.http.php) – for link manipulation through `Idio\Api\Link`. If not available a compatible library is used.
 
 ## Installation
 
