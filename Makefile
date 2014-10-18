@@ -32,7 +32,7 @@ vendor: composer.json composer.lock
 	touch $@
 
 vendor/dev: composer.json composer.lock
-	composer install --dev
+	composer install
 	touch $@
 
 # phonies
