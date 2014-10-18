@@ -7,6 +7,8 @@ A light, object orientated wrapper for the Idio API
 * Follows the PSR-2 coding standard.
 * Documented and tested
 
+[![Build Status](https://travis-ci.org/idio/api-php.svg?branch=master)](https://travis-ci.org/idio/api-php)
+
 ## Introduction
 
 This library is not concerned with the individual API endpoints. Instead it acts as a simple wrapper for making requests against the API, whilst handling authentication and providing some convenient ways of, for example, making concurrent requests.
