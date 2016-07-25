@@ -133,10 +133,9 @@ class Client
         $version = $this->getVersion();
         $path = ($version ? "/{$version}" : "") . $path;
 
-        $string = utf8_encode(
-            strtoupper($method) . "\n" .
-            $path . "\n" .
-            $this->date()
+        $string = mb_convert_encoding(
+            strtoupper($method) . "\n" .  $path . "\n" .  $this->date(),
+            'UTF-8'
         );
 
         return base64_encode(hash_hmac("sha1", $string, $secretKey));
