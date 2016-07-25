@@ -17,6 +17,7 @@ This library is not concerned with the individual API endpoints. Instead it acts
 
 * PHP >= 5.3.2 
  * [cURL extension](http://php.net/manual/en/book.curl.php)
+ * [Multibyte String extension](http://php.net/manual/en/book.mbstring.php)
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit/) – to run tests. (optional, installable via composer)
 
 ### Suggestions
