@@ -1,5 +1,6 @@
 {
     "name": "idio/api-php",
+    "description": "A library for accessing the idio API and signing requests",
     "version": "0.5.0",
     "autoload" : {
         "psr-0" : {"Idio": "lib"}
@@ -14,5 +15,6 @@
     },
     "suggest" : {
         "ext-http" : "The HTTP extension (version 1.x) is recommended. A compatible library is included if it is not."
-    }
+    },
+    "license": "proprietary"
 }
