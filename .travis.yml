@@ -9,6 +9,6 @@ script: "make test"
 notifications:
   hipchat:
     rooms:
-      - secure: TKe7Thma4yzEl8FtDe2wOqRlXTEPJG17tD7Mz3q57OkGVNUnfsl//VqBLAi0vkV5Tm9iU6zadjU5TefWicqldi2NeiGJVpLvM8Ul5bVzWJ99f3EQMxC0sGZVaK5ld/3/nKDKj1TB5zoPVVov+igjEFa4gaEtWifSgR1ayv21Wew=
+      secure: E2vTn0Zp+IVVK2E2RfzmsFk4mEB3JpM2GqzIaXpRhsBKPgA6N3eIy7jAv5CYmXC4qVjaz2D4rSAs8/2s8xboTJN7YU04Srg6ZURVY2weVgOkocy6ZB5Kqo4nsE3/bJZRBh98ZtIQgwDE8YVBFMa6wqdze1SAK6CgDk0a0cxNN1Y=
     template:
       - 'Build #%{build_number} (%{commit}) of %{repository_name}/%{branch} %{result} (%{duration}) %{build_url}'
